@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khám Phá Châu Âu - Ôn Tập Địa Lí 7</title>
+    <style>
+        :root {
+            --primary: #0277bd; /* Xanh dương */
+            --primary-light: #58a5f0;
+            --secondary: #2e7d32; /* Xanh lá */
+            --secondary-light: #60ad5e;
+            --bg-color: #f0fdf4; /* Xanh lá nhạt nền */
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --danger: #d32f2f;
+            --success: #388e3c;
+            --warning: #fbc02d;
+            --radius: 16px;
+            --shadow: 0 8px 24px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* Typography */
+        h1, h2, h3 { color: var(--primary); }
+        h1 { text-align: center; margin: 20px 0; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .subtitle { text-align: center; color: var(--secondary); font-weight: bold; margin-bottom: 30px; font-size: 1.2rem; }
+
+        /* Layout */
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .hidden { display: none !important; }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white; border: none; padding: 12px 24px; border-radius: 30px;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            transition: var(--transition); box-shadow: 0 4px 10px rgba(2, 119, 189, 0.3);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(2, 119, 189, 0.4); }
+        .btn-green { background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
+        .btn-green:hover { box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); box-shadow: none; }
+        .btn-outline:hover { background: var(--primary); color: white; }
+
+        /* Home Screen */
+        .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .lesson-card {
+            background: var(--card-bg); border-radius: var(--radius); padding: 30px 20px;
+            text-align: center; cursor: pointer; transition: var(--transition);
+            box-shadow: var(--shadow); border-top: 5px solid var(--primary);
+            position: relative; overflow: hidden;
+        }
+        .lesson-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(88,165,240,0.1) 0%, transparent 70%);
+            opacity: 0; transition: var(--transition);
+        }
+        .lesson-card:hover { transform: translateY(-5px) scale(1.02); border-color: var(--secondary); }
+        .lesson-card:hover::before { opacity: 1; }
+        .lesson-card h3 { font-size: 1.3rem; margin-bottom: 10px; z-index: 1; position: relative; }
+        .badge { position: absolute; top: 10px; right: 10px; background: #ffd700; color: #b8860b; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; display: none; }
+
+        .game-banner {
+            background: linear-gradient(135deg, #ff9800, #f57c00); color: white;
+            border-radius: var(--radius); padding: 30px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);
+        }
+        .game-banner:hover { transform: scale(1.02); }
+        .game-banner h2 { color: white; margin-bottom: 10px; }
+
+        /* Lesson Screen */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: white; padding: 10px; border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
+        .tab-btn {
+            flex: 1; padding: 12px; border: none; background: transparent; font-weight: bold;
+            color: var(--text-muted); border-radius: 12px; cursor: pointer; transition: var(--transition);
+            white-space: nowrap; text-align: center;
+        }
+        .tab-btn.active { background: var(--primary-light); color: white; }
+
+        .content-panel { background: white; border-radius: var(--radius); padding: 30px; box-shadow: var(--shadow); min-height: 500px; animation: fadeIn 0.4s ease; }
+        
+        /* Tab 1: Nội dung chính */
+        .summary-list { list-style: none; }
+        .summary-list li { position: relative; padding-left: 30px; margin-bottom: 15px; font-size: 1.1rem; }
+        .summary-list li::before {
+            content: '🌿'; position: absolute; left: 0; top: 2px; font-size: 1.2rem;
+        }
+
+        /* ------------------------------------------- */
+        /* Tab 2: SƠ ĐỒ TƯ DUY (MINDMAP) - NÂNG CẤP V2   */
+        /* ------------------------------------------- */
+        .mindmap-container {
+            display: flex; justify-content: space-between; align-items: center;
+            position: relative; padding: 40px 0; min-height: 450px; gap: 20px;
+        }
+        
+        .mm-svg-lines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none; /* Click xuyên qua SVG */
+        }
+        
+        .mm-path {
+            fill: none; stroke-width: 3px; stroke-linecap: round;
+            transition: stroke-width 0.3s ease, filter 0.3s ease;
+        }
+
+        .mm-col {
+            display: flex; flex-direction: column; gap: 25px;
+            flex: 1; z-index: 2; width: 100%;
+        }
+        .mm-left { align-items: flex-end; }
+        .mm-right { align-items: flex-start; }
+
+        .mm-center {
+            width: 170px; height: 170px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4dd0e1, var(--primary));
+            color: white; font-weight: bold; text-align: center;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 25px rgba(2, 119, 189, 0.5), inset 0 0 15px rgba(255,255,255,0.3);
+            z-index: 3; flex-shrink: 0; border: 4px solid white; padding: 15px;
+            font-size: 1.3rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            transition: var(--transition);
+        }
+        .mm-center:hover {
+            transform: scale(1.05); box-shadow: 0 0 35px rgba(2, 119, 189, 0.8);
+        }
+
+        .mm-box-wrapper { position: relative; z-index: 2; }
+        
+        .mm-box {
+            padding: 12px 20px; border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            max-width: 260px; text-align: center;
+            font-weight: 500; font-size: 1rem; color: #2d3436;
+            border: 2px solid; /* Màu sẽ được gán bằng JS */
+            transition: var(--transition); cursor: default;
+            background-color: white; /* Nền sẽ được pha màu bằng JS */
+        }
+        .mm-box:hover {
+            transform: scale(1.05);
+            /* Box-shadow glow sẽ được xử lý qua biến CSS trong JS */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1), 0 0 15px var(--b-color);
+        }
+
+        /* Tab 3: Quiz */
+        .quiz-header { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; color: var(--secondary); border-bottom: 2px solid #eee; padding-bottom: 10px;}
+        .question-card { margin-bottom: 25px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 12px; background: #fafafa; }
+        .q-text { font-size: 1.1rem; font-weight: bold; margin-bottom: 15px; color: var(--primary); }
+        .q-type-badge { display: inline-block; font-size: 0.8rem; padding: 3px 8px; border-radius: 8px; background: #e0e0e0; margin-bottom: 10px; color: #555;}
+        
+        /* Trắc nghiệm & Đúng/Sai */
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media(min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        .option-btn {
+            padding: 12px; text-align: left; background: white; border: 2px solid #ddd;
+            border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 1rem;
+        }
+        .option-btn:hover { border-color: var(--primary-light); background: #f5f9ff; }
+        .option-btn.selected { border-color: var(--primary); background: #e3f2fd; }
+        .option-btn.correct { border-color: var(--success); background: #e8f5e9; color: var(--success); font-weight: bold;}
+        .option-btn.wrong { border-color: var(--danger); background: #ffebee; color: var(--danger); }
+
+        /* Ghép nối (Click to match) */
+        .match-container { display: flex; gap: 20px; }
+        .match-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .match-item {
+            padding: 12px; background: white; border: 2px solid #ddd; border-radius: 8px;
+            cursor: pointer; transition: 0.2s; text-align: center; font-weight: 500;
+        }
+        .match-item:hover { border-color: var(--secondary-light); }
+        .match-item.selected { border-color: var(--secondary); background: #e8f5e9; transform: scale(1.02); box-shadow: 0 0 10px rgba(46,125,50,0.2); }
+        .match-item.matched { border-color: var(--success); background: #c8e6c9; color: #1b5e20; cursor: default; opacity: 0.8; }
+        .match-item.error { animation: shake 0.4s; border-color: var(--danger); background: #ffebee; }
+        .match-lines { text-align: center; margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); }
+
+        .explanation { margin-top: 15px; padding: 10px; background: #fff3e0; border-left: 4px solid var(--warning); border-radius: 4px; display: none; font-size: 0.95rem;}
+        
+        .quiz-controls { text-align: center; margin-top: 30px; }
+        
+        /* Results */
+        .result-screen { text-align: center; padding: 40px 20px; }
+        .score-circle {
+            width: 150px; height: 150px; border-radius: 50%; border: 8px solid var(--primary);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 2.5rem; font-weight: bold; color: var(--primary);
+        }
+        .progress-bar-bg { width: 100%; height: 20px; background: #e0e0e0; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--secondary-light)); width: 0%; transition: width 1s ease-in-out; }
+
+        /* Game Screen */
+        #game-screen { background: linear-gradient(135deg, #1a237e, #311b92); color: white; min-height: 80vh; border-radius: var(--radius); padding: 30px; position: relative; overflow: hidden;}
+        .game-top { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px;}
+        .timer { color: #ffeb3b; font-size: 1.5rem; }
+        .game-q-card { background: white; color: var(--text-main); padding: 30px; border-radius: var(--radius); box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; animation: slideUp 0.3s;}
+        .game-q-card .q-text { font-size: 1.5rem; margin-bottom: 25px; }
+        .game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .game-btn { background: #f0f0f0; border: 2px solid transparent; padding: 15px; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; font-weight: bold;}
+        .game-btn:hover { background: #e0e0e0; transform: scale(1.02); }
+        
+        /* Stats Panel */
+        .stats-panel { background: white; padding: 15px; border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); display: flex; justify-content: space-around; flex-wrap: wrap;}
+        .stat-item { text-align: center; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
+
+        /* Responsive */
+        @media (max-width: 850px) {
+            .tabs { flex-direction: column; }
+            .match-container { flex-direction: column; }
+            .game-options { grid-template-columns: 1fr; }
+            
+            /* Responsive Mindmap: Chuyển sang dọc (Top - Down) */
+            .mindmap-container { flex-direction: column; padding: 20px 0; gap: 30px; }
+            .mm-center { width: 140px; height: 140px; font-size: 1.1rem; z-index: 5;}
+            .mm-col { align-items: center !important; gap: 15px; }
+            .mm-box { max-width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="app">
+        
+        <!-- MÀN HÌNH CHÍNH -->
+        <div id="home-screen">
+            <h1>🌍 KHÁM PHÁ CHÂU ÂU</h1>
+            <div class="subtitle">Ôn tập Địa lí 7 - Trực quan & Tương tác</div>
+            
+            <div class="stats-panel" id="main-stats">
+                <div class="stat-item">
+                    <div>Tiến độ chung</div>
+                    <div class="stat-val" id="total-progress">0%</div>
+                </div>
+                <div class="stat-item">
+                    <div>Kỷ lục Game</div>
+                    <div class="stat-val" id="high-score">0 đ</div>
+                </div>
+            </div>
+
+            <div class="home-grid">
+                <div class="lesson-card" onclick="openLesson(1)">
+                    <span class="badge" id="badge-1">🌟 Xuất sắc</span>
+                    <h3>Bài 1</h3>
+                    <p>Vị trí địa lí, đặc điểm tự nhiên</p>
+                </div>
+                <div class="lesson-card" onclick="openLesson(2)">
+                    <span class="badge" id="badge-2">🌟 Xuất sắc</span>
+                    <h3>Bài 2</h3>
+                    <p>Đặc điểm dân cư, xã hội</p>
+                </div>
+                <div class="lesson-card" onclick="openLesson(3)">
+                    <span class="badge" id="badge-3">🌟 Xuất sắc</span>
+                    <h3>Bài 3</h3>
+                    <p>Khai thác, sử dụng và bảo vệ thiên nhiên</p>
+                </div>
+                <div class="lesson-card" onclick="openLesson(4)">
+                    <span class="badge" id="badge-4">🌟 Xuất sắc</span>
+                    <h3>Bài 4</h3>
+                    <p>Liên minh châu Âu (EU)</p>
+                </div>
+            </div>
+
+            <div class="game-banner" onclick="startGame()">
+                <h2>🎮 AI LÀ CHUYÊN GIA CHÂU ÂU?</h2>
+                <p>Thử thách 90 giây - Tổng ôn toàn bộ kiến thức!</p>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH BÀI HỌC -->
+        <div id="lesson-screen" class="hidden">
+            <div class="header-bar">
+                <button class="btn btn-outline" onclick="goHome()">⬅ Về trang chủ</button>
+                <h2 id="lesson-title">Tên Bài Học</h2>
+                <div style="width: 120px;"></div>
+            </div>
+
+            <nav class="tabs">
+                <button class="tab-btn active" onclick="switchTab('content')">📖 Nội dung chính</button>
+                <button class="tab-btn" onclick="switchTab('mindmap')">🧠 Sơ đồ tư duy</button>
+                <button class="tab-btn" onclick="switchTab('quiz')">✍️ Kiểm tra đánh giá</button>
+            </nav>
+
+            <div class="content-panel">
+                <!-- Tab Nội Dung -->
+                <div id="tab-content">
+                    <ul class="summary-list" id="lesson-summary">
+                        <!-- Rendered by JS -->
+                    </ul>
+                </div>
+
+                <!-- Tab Sơ Đồ -->
+                <div id="tab-mindmap" class="hidden">
+                    <div class="mindmap-container" id="mindmap-render">
+                        <!-- Cấu trúc sẽ được tạo bằng JS để phân 2 bên trái/phải -->
+                    </div>
+                </div>
+
+                <!-- Tab Quiz -->
+                <div id="tab-quiz" class="hidden">
+                    <div id="quiz-container">
+                        <div class="quiz-header">
+                            <span>Bài tập củng cố</span>
+                            <span id="quiz-progress">Câu 1/10</span>
+                        </div>
+                        <div id="questions-list">
+                            <!-- Rendered by JS -->
+                        </div>
+                        <div class="quiz-controls">
+                            <button class="btn btn-green" id="btn-submit-quiz" onclick="submitQuiz()">Nộp bài & Xem điểm</button>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-result" class="result-screen hidden">
+                        <h2>Kết Quả Của Bạn</h2>
+                        <div class="score-circle">
+                            <span id="final-score">0</span>
+                            <span style="font-size: 1rem; color: #666;">/ 10</span>
+                        </div>
+                        <h3 id="result-feedback" style="margin-bottom: 15px;"></h3>
+                        <p id="result-suggestion" style="color: var(--danger);"></p>
+                        
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="result-bar"></div>
+                        </div>
+                        
+                        <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
+                            <button class="btn btn-outline" onclick="renderQuiz()">Làm lại</button>
+                            <button class="btn" onclick="goHome()">Về trang chủ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH GAME -->
+        <div id="game-screen" class="hidden">
+            <div class="game-top">
+                <button class="btn" style="background: rgba(255,255,255,0.2); border: 1px solid white;" onclick="quitGame()">Thoát</button>
+                <div>Điểm: <span id="game-score-display">0</span>/20</div>
+                <div class="timer">⏱ <span id="game-time">90</span>s</div>
+            </div>
+            
+            <div id="game-play-area">
+                <div class="game-q-card">
+                    <div class="q-type-badge" id="game-q-number" style="background: #e8eaf6; color: #3f51b5; font-weight:bold;">Câu 1/20</div>
+                    <div class="q-text" id="game-question">Câu hỏi hiển thị ở đây?</div>
+                    <div class="game-options" id="game-options">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="game-result-area" class="result-screen hidden" style="background: white; border-radius: 16px; color: var(--text-main);">
+                <h2 style="color: var(--primary);">HẾT GIỜ!</h2>
+                <div class="score-circle" style="margin-top: 20px;">
+                    <span id="game-final-score">0</span>
+                </div>
+                <h3 id="game-feedback" style="margin: 20px 0; color: var(--secondary);"></h3>
+                <button class="btn btn-green" onclick="startGame()">Chơi Lại</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- DỮ LIỆU NỘI DUNG BÀI HỌC ---
+    const lessonData = {
+        1: {
+            title: "Bài 1. Vị trí địa lí, đặc điểm tự nhiên châu Âu",
+            summary: [
+                "Vị trí: Nằm ở phía tây lục địa Á – Âu, ngăn cách với châu Á bởi dãy U-ran.",
+                "Địa hình: 2/3 diện tích là đồng bằng. Núi già phân bố ở phía bắc và trung tâm, núi trẻ ở phía nam.",
+                "Khí hậu: Phân hóa đa dạng, chủ yếu là khí hậu ôn đới (ôn đới hải dương và ôn đới lục địa).",
+                "Sông ngòi: Mạng lưới dày đặc, lượng nước dồi dào. Các sông lớn: Vôn-ga, Đa-nuýp, Rai-nơ.",
+                "Đới thiên nhiên: Phân hóa rõ rệt theo vĩ độ (đài nguyên, rừng lá kim, rừng lá rộng, rừng cứng địa trung hải)."
+            ],
+            mindmap: [
+                "Vị trí: Tây lục địa Á-Âu",
+                "Đồng bằng chiếm 2/3 diện tích",
+                "Khí hậu: Chủ yếu Ôn đới",
+                "Núi già (Bắc) - Núi trẻ (Nam)",
+                "Sông ngòi mạng lưới dày đặc",
+                "Thiên nhiên phân hóa theo vĩ độ"
+            ]
+        },
+        2: {
+            title: "Bài 2. Đặc điểm dân cư, xã hội châu Âu",
+            summary: [
+                "Quy mô: Dân số khoảng 740 triệu người (không kể LBN Nga), xếp thứ 4 thế giới.",
+                "Cơ cấu: Dân số già, tỉ lệ sinh thấp, tuổi thọ trung bình cao.",
+                "Đô thị hóa: Mức độ cao, tỉ lệ dân thành thị chiếm khoảng 75%. Mạng lưới đô thị dày đặc.",
+                "Xã hội: Trình độ dân trí cao, chất lượng cuộc sống tốt.",
+                "Di cư: Là châu lục thu hút nhiều người nhập cư, gây ra các vấn đề về quản lý xã hội."
+            ],
+            mindmap: [
+                "Quy mô dân số: ~740 triệu",
+                "Cơ cấu: Dân số già",
+                "Đô thị hóa cao: ~75%",
+                "Tỉ lệ sinh rất thấp",
+                "Dân trí cao, chất lượng sống tốt",
+                "Thu hút người nhập cư lớn"
+            ]
+        },
+        3: {
+            title: "Bài 3. Khai thác, sử dụng và bảo vệ thiên nhiên ở châu Âu",
+            summary: [
+                "Bảo vệ không khí: Giảm phát thải CO2, phát triển mạnh năng lượng tái tạo (gió, mặt trời).",
+                "Bảo vệ môi trường nước: Xử lý nước thải nghiêm ngặt, làm sạch các dòng sông bị ô nhiễm.",
+                "Bảo vệ đa dạng sinh học: Thành lập các khu bảo tồn thiên nhiên, duy trì rừng.",
+                "Ứng phó biến đổi khí hậu: Trồng cây xanh, xây dựng đê biển, chuyển đổi nền kinh tế xanh.",
+                "Sử dụng đất: Ứng dụng công nghệ cao trong nông nghiệp để bảo vệ độ phì nhiêu."
+            ],
+            mindmap: [
+                "Giảm triệt để phát thải CO₂",
+                "Phát triển năng lượng tái tạo",
+                "Xử lý nghiêm ngặt môi trường nước",
+                "Thành lập mạng lưới khu bảo tồn",
+                "Ứng phó biến đổi khí hậu",
+                "Nông nghiệp công nghệ cao"
+            ]
+        },
+        4: {
+            title: "Bài 4. Liên minh châu Âu (EU)",
+            summary: [
+                "Lịch sử: Thành lập năm 1993 với Hiệp ước Ma-xtrích.",
+                "Quy mô: Gồm 27 quốc gia thành viên (sau khi Anh rời đi).",
+                "Kinh tế: Là một trong những trung tâm kinh tế lớn nhất thế giới.",
+                "Thị trường: Tạo ra thị trường chung với 4 quyền tự do lưu thông (hàng hóa, dịch vụ, con người, tiền vốn).",
+                "Tiền tệ: Sử dụng đồng tiền chung Euro (ở khu vực đồng Euro).",
+                "Vai trò: Có tiếng nói và ảnh hưởng lớn trên toàn cầu về kinh tế, thương mại, môi trường."
+            ],
+            mindmap: [
+                "Thành lập: 1993",
+                "Thành viên: 27 quốc gia",
+                "Sử dụng đồng tiền chung Euro",
+                "Trung tâm kinh tế lớn thế giới",
+                "Thị trường chung: 4 tự do lưu thông",
+                "Vai trò toàn cầu to lớn"
+            ]
+        }
+    };
+
+    // --- BỘ MÀU PASTEL CHO MINDMAP ---
+    const mindmapColors = ['#ff7675', '#0984e3', '#00b894', '#e84393', '#fdcb6e', '#6c5ce7'];
+
+    // --- NGÂN HÀNG CÂU HỎI (40 Câu) ---
+    const questionBank = [
+        // --- BÀI 1 (10 câu) ---
+        { id: 101, lesson: 1, type: 'mcq', q: "Châu Âu nằm ở phía nào của lục địa Á - Âu?", options: ["Phía Đông", "Phía Tây", "Phía Nam", "Phía Bắc"], ans: 1, exp: "Châu Âu là bộ phận phía tây của lục địa Á - Âu." },
+        { id: 102, lesson: 1, type: 'mcq', q: "Dạng địa hình nào chiếm 2/3 diện tích châu Âu?", options: ["Núi trẻ", "Núi già", "Đồng bằng", "Cao nguyên"], ans: 2, exp: "Đồng bằng chiếm 2/3 diện tích, trải dài từ tây sang đông." },
+        { id: 103, lesson: 1, type: 'mcq', q: "Dãy núi nào được coi là ranh giới tự nhiên giữa châu Âu và châu Á?", options: ["An-pơ", "Cáp-ca", "U-ran", "Xcan-đi-na-vi"], ans: 2, exp: "Dãy U-ran ở phía đông là ranh giới tự nhiên với châu Á." },
+        { id: 104, lesson: 1, type: 'mcq', q: "Đại bộ phận lãnh thổ châu Âu nằm trong đới khí hậu nào?", options: ["Nhiệt đới", "Ôn đới", "Hàn đới", "Cận nhiệt đới"], ans: 1, exp: "Do vị trí phần lớn nằm giữa vĩ độ 36°B và 71°B nên chủ yếu là ôn đới." },
+        { id: 105, lesson: 1, type: 'mcq', q: "Sông nào dài nhất châu Âu?", options: ["Đa-nuýp", "Rai-nơ", "Vôn-ga", "En-bơ"], ans: 2, exp: "Sông Vôn-ga chảy trên đồng bằng Đông Âu là sông dài nhất." },
+        { id: 106, lesson: 1, type: 'mcq', q: "Càng vào sâu trong nội địa, khí hậu châu Âu có đặc điểm:", options: ["Càng ẩm ướt", "Càng khô hạn và lạnh", "Biên độ nhiệt năm nhỏ", "Mưa quanh năm"], ans: 1, exp: "Vào sâu nội địa, ảnh hưởng của biển giảm, khí hậu mang tính lục địa." },
+        { id: 107, lesson: 1, type: 'tf', q: "Xác định tính chính xác: 'Thiên nhiên châu Âu chỉ có một đới duy nhất là đới ôn hòa.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 1, exp: "Chưa chính xác vì thiên nhiên châu Âu phân hóa đa dạng thành đới lạnh và đới ôn hòa (chiếm phần lớn)." },
+        { id: 108, lesson: 1, type: 'tf', q: "Xác định tính chính xác: 'Địa hình núi trẻ ở châu Âu phân bố chủ yếu ở phía Nam.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 0, exp: "Chính xác. Các dãy núi trẻ như An-pơ, Các-pát nằm ở phía Nam." },
+        { id: 109, lesson: 1, type: 'match', q: "Ghép nối dạng địa hình với vị trí phân bố:", pairs: [ ["Núi trẻ", "Phía Nam"], ["Đồng bằng", "Trải dài từ Tây sang Đông"], ["Núi già", "Phía Bắc và vùng trung tâm"] ] },
+        { id: 110, lesson: 1, type: 'match', q: "Ghép nối đới khí hậu với thảm thực vật tương ứng:", pairs: [ ["Khí hậu ôn đới hải dương", "Rừng lá rộng"], ["Khí hậu cận nhiệt địa trung hải", "Rừng lá cứng"], ["Khí hậu ôn đới lục địa", "Rừng lá kim (Taiga)"] ] },
+
+        // --- BÀI 2 (10 câu) ---
+        { id: 201, lesson: 2, type: 'mcq', q: "Dân số châu Âu (năm 2020) khoảng bao nhiêu triệu người?", options: ["~500 triệu", "~740 triệu", "~900 triệu", "Hơn 1 tỉ"], ans: 1, exp: "Dân số châu Âu năm 2020 là khoảng 747 triệu người." },
+        { id: 202, lesson: 2, type: 'mcq', q: "Đặc điểm nổi bật nhất về cơ cấu tuổi của dân cư châu Âu là gì?", options: ["Dân số trẻ", "Dân số đang trẻ hóa", "Dân số già", "Tỉ lệ trẻ em cao"], ans: 2, exp: "Châu Âu có cơ cấu dân số già do tuổi thọ cao và tỉ lệ sinh thấp." },
+        { id: 203, lesson: 2, type: 'mcq', q: "Tỉ lệ dân thành thị ở châu Âu hiện nay ở mức:", options: ["Rất thấp", "Trung bình", "Cao (khoảng 75%)", "Tuyệt đối (100%)"], ans: 2, exp: "Mức độ đô thị hóa cao, khoảng 75% dân số sống ở thành thị." },
+        { id: 204, lesson: 2, type: 'mcq', q: "Đâu KHÔNG phải là đặc điểm xã hội châu Âu?", options: ["Trình độ học vấn cao", "Chăm sóc y tế tốt", "Chất lượng sống thấp", "Thu nhập bình quân cao"], ans: 2, exp: "Châu Âu có chất lượng cuộc sống thuộc hàng cao nhất thế giới." },
+        { id: 205, lesson: 2, type: 'mcq', q: "Sự gia tăng dân số của châu Âu hiện nay chủ yếu là do:", options: ["Tỉ lệ sinh rất cao", "Nhập cư", "Giảm tỉ lệ tử vong", "Chính sách khuyến sinh"], ans: 1, exp: "Do tỉ lệ sinh tự nhiên thấp/âm, dân số tăng chủ yếu nhờ người nhập cư." },
+        { id: 206, lesson: 2, type: 'mcq', q: "Đô thị hóa ở châu Âu có đặc điểm:", options: ["Tự phát, thiếu quy hoạch", "Mạng lưới đô thị dày đặc, phân bố đều", "Chỉ tập trung 1-2 siêu đô thị", "Dân thành thị đang giảm"], ans: 1, exp: "Các đô thị mở rộng, nối liền nhau tạo thành các dải đô thị." },
+        { id: 207, lesson: 2, type: 'tf', q: "Xác định tính chính xác: 'Châu Âu là châu lục có tỉ lệ gia tăng dân số tự nhiên cao nhất thế giới.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 1, exp: "Chưa chính xác. Tỉ lệ gia tăng tự nhiên của châu Âu rất thấp, thậm chí âm ở một số nước." },
+        { id: 208, lesson: 2, type: 'tf', q: "Xác định tính chính xác: 'Người nhập cư giúp giải quyết tình trạng thiếu hụt lao động ở châu Âu.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 0, exp: "Chính xác. Tuy nhiên cũng gây ra các thách thức về quản lý xã hội." },
+        { id: 209, lesson: 2, type: 'match', q: "Ghép nối nguyên nhân và hệ quả về dân cư châu Âu:", pairs: [ ["Tỉ lệ sinh giảm, tuổi thọ tăng", "Cơ cấu dân số già"], ["Kinh tế phát triển, công nghiệp hóa sớm", "Mức độ đô thị hóa cao"], ["Kinh tế phát triển, nhu cầu lao động lớn", "Thu hút nhiều người nhập cư"] ] },
+        { id: 210, lesson: 2, type: 'match', q: "Ghép nối các chỉ số xã hội với đặc điểm của châu Âu:", pairs: [ ["Chỉ số HDI", "Rất cao"], ["Tỉ lệ tử vong ở trẻ em", "Rất thấp"], ["Tuổi thọ trung bình", "Cao"] ] },
+
+        // --- BÀI 3 (10 câu) ---
+        { id: 301, lesson: 3, type: 'mcq', q: "Biện pháp quan trọng nhất để giảm ô nhiễm không khí ở châu Âu là gì?", options: ["Chặt cây xanh", "Tăng sử dụng than đá", "Phát triển năng lượng tái tạo", "Đóng cửa mọi nhà máy"], ans: 2, exp: "Châu Âu đi đầu trong việc sử dụng năng lượng gió, mặt trời để giảm phát thải." },
+        { id: 302, lesson: 3, type: 'mcq', q: "Để bảo vệ môi trường nước, các nước châu Âu thực hiện biện pháp nào?", options: ["Xả thẳng nước thải ra sông", "Kiểm soát nghiêm ngặt nguồn nước thải", "Lấp các hồ tự nhiên", "Chỉ dùng nước ngầm"], ans: 1, exp: "Hệ thống lọc nước thải và kiểm soát các nhà máy được áp dụng triệt để." },
+        { id: 303, lesson: 3, type: 'mcq', q: "Sự kiện nào thể hiện cam kết mạnh mẽ của châu Âu trong ứng phó biến đổi khí hậu?", options: ["Rút khỏi Hiệp định Paris", "Mục tiêu trung hòa carbon", "Tăng thuế xuất khẩu", "Mở rộng khai thác dầu"], ans: 1, exp: "EU đặt mục tiêu đạt phát thải ròng bằng 0 (trung hòa carbon) vào năm 2050." },
+        { id: 304, lesson: 3, type: 'mcq', q: "Để bảo vệ đa dạng sinh học, biện pháp chủ yếu ở châu Âu là:", options: ["Du nhập nhiều loài ngoại lai", "Săn bắt tự do", "Lập mạng lưới khu bảo tồn (Natura 2000)", "Phá rừng làm nông nghiệp"], ans: 2, exp: "Natura 2000 là mạng lưới bảo tồn thiên nhiên lớn nhất thế giới của EU." },
+        { id: 305, lesson: 3, type: 'mcq', q: "Loại năng lượng nào sau đây KHÔNG phải năng lượng tái tạo đang được khuyến khích ở châu Âu?", options: ["Năng lượng gió", "Năng lượng Mặt trời", "Năng lượng điện nhiệt từ than đá", "Năng lượng địa nhiệt"], ans: 2, exp: "Than đá gây ô nhiễm lớn và đang bị cắt giảm mạnh tại châu Âu." },
+        { id: 306, lesson: 3, type: 'mcq', q: "Để ứng phó với mực nước biển dâng, một số nước như Hà Lan đã làm gì?", options: ["Di dân lên núi", "Xây dựng hệ thống đê biển kiên cố", "Bỏ hoang đất ven biển", "Ngừng trồng trọt"], ans: 1, exp: "Hà Lan nổi tiếng với hệ thống đê biển và đập ngăn nước khổng lồ." },
+        { id: 307, lesson: 3, type: 'tf', q: "Xác định tính chính xác: 'Châu Âu là khu vực đi đầu thế giới trong việc cắt giảm khí nhà kính.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 0, exp: "Chính xác. Châu Âu áp dụng nhiều chính sách nghiêm ngặt về môi trường." },
+        { id: 308, lesson: 3, type: 'tf', q: "Xác định tính chính xác: 'Việc trồng lại rừng không có tác dụng trong việc bảo vệ môi trường ở châu Âu.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 1, exp: "Chưa chính xác. Trồng rừng giúp hấp thụ CO2 và bảo vệ đa dạng sinh học." },
+        { id: 309, lesson: 3, type: 'match', q: "Ghép nối vấn đề môi trường và giải pháp tương ứng tại châu Âu:", pairs: [ ["Ô nhiễm không khí", "Chuyển sang đi xe đạp, xe điện"], ["Ô nhiễm nước", "Cải tạo và làm sạch các dòng sông"], ["Suy giảm sinh học", "Bảo vệ nghiêm ngặt các cánh rừng nguyên sinh"] ] },
+        { id: 310, lesson: 3, type: 'match', q: "Ghép nối nguồn năng lượng:", pairs: [ ["Năng lượng hóa thạch (đang giảm)", "Dầu mỏ, than đá"], ["Năng lượng tái tạo (đang tăng)", "Gió, mặt trời"], ["Nhiên liệu sinh học", "Sản xuất từ thực vật"] ] },
+
+        // --- BÀI 4 (10 câu) ---
+        { id: 401, lesson: 4, type: 'mcq', q: "Liên minh châu Âu (EU) được chính thức thành lập vào năm nào?", options: ["1957", "1993", "1999", "2002"], ans: 1, exp: "EU chính thức được thành lập năm 1993 với Hiệp ước Ma-xtrích." },
+        { id: 402, lesson: 4, type: 'mcq', q: "Hiện nay (sau khi Anh rời đi), EU có bao nhiêu quốc gia thành viên?", options: ["25", "26", "27", "28"], ans: 2, exp: "Tính đến hiện tại, EU có 27 quốc gia thành viên." },
+        { id: 403, lesson: 4, type: 'mcq', q: "Đồng tiền chung được nhiều nước EU sử dụng có tên là gì?", options: ["Bảng Anh", "Đô la", "Euro", "Rúp"], ans: 2, exp: "Euro là đồng tiền chung của khu vực đồng tiền chung châu Âu (Eurozone)." },
+        { id: 404, lesson: 4, type: 'mcq', q: "Bốn quyền tự do lưu thông của EU KHÔNG bao gồm quyền nào?", options: ["Tự do lưu thông hàng hóa", "Tự do lưu thông dịch vụ", "Tự do lưu thông vũ khí", "Tự do lưu thông con người"], ans: 2, exp: "4 quyền là: hàng hóa, dịch vụ, con người, và tiền vốn." },
+        { id: 405, lesson: 4, type: 'mcq', q: "Vị thế của EU trên trường quốc tế là:", options: ["Một liên minh quân sự", "Một trong những trung tâm kinh tế lớn nhất thế giới", "Khu vực kém phát triển", "Chỉ mạnh về nông nghiệp"], ans: 1, exp: "EU chiếm tỉ trọng lớn trong GDP và thương mại toàn cầu." },
+        { id: 406, lesson: 4, type: 'mcq', q: "Việc sử dụng chung đồng Euro mang lại lợi ích gì?", options: ["Xóa bỏ hoàn toàn ngôn ngữ riêng", "Tăng chi phí chuyển đổi ngoại tệ", "Thuận lợi cho thương mại và đầu tư", "Giảm sự phát triển kinh tế"], ans: 2, exp: "Đồng tiền chung giúp xóa bỏ rủi ro tỉ giá và phí chuyển đổi." },
+        { id: 407, lesson: 4, type: 'tf', q: "Xác định tính chính xác: 'Công dân của một nước trong EU có thể tự do làm việc tại một nước EU khác mà không cần xin visa.'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 0, exp: "Chính xác. Đó là quyền tự do lưu thông con người." },
+        { id: 408, lesson: 4, type: 'tf', q: "Xác định tính chính xác: 'Tất cả các nước châu Âu đều là thành viên của Liên minh châu Âu (EU).'", options: ["Phát biểu chính xác", "Phát biểu chưa chính xác"], ans: 1, exp: "Chưa chính xác. Ví dụ Anh, Thụy Sĩ, Na Uy không thuộc EU." },
+        { id: 409, lesson: 4, type: 'match', q: "Ghép nối tính chất của EU:", pairs: [ ["Thị trường chung", "Xóa bỏ hàng rào thuế quan nội bộ"], ["Đồng tiền chung", "Sử dụng Euro"], ["Tự do di chuyển", "Hiệp ước Schengen"] ] },
+        { id: 410, lesson: 4, type: 'match', q: "Ghép nối các quốc gia với trạng thái đối với EU:", pairs: [ ["Pháp, Đức, Ý", "Thành viên sáng lập/hiện tại của EU"], ["Vương quốc Anh", "Đã rời khỏi EU (Brexit)"], ["Thụy Sĩ", "Chưa từng gia nhập EU"] ] }
+    ];
+
+    // --- BIẾN TRẠNG THÁI ---
+    let currentLesson = 1;
+    let quizState = { questions: [], answers: {}, score: 0 };
+    let gameState = { questions: [], currentIdx: 0, score: 0, timeLeft: 90, timerId: null };
+    let userProgress = JSON.parse(localStorage.getItem('geo7_progress')) || { lessons: {1:0, 2:0, 3:0, 4:0}, highScore: 0 };
+
+    // --- ÂM THANH (Web Audio API) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if(type === 'correct') {
+            osc.type = 'sine'; osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        } else if(type === 'wrong') {
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+    }
+
+    // --- HÀM TIỆN ÍCH ---
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex); currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    // --- ĐIỀU HƯỚNG ---
+    function updateProgressUI() {
+        let totalScore = 0;
+        for(let i=1; i<=4; i++) {
+            totalScore += userProgress.lessons[i];
+            const badge = document.getElementById(`badge-${i}`);
+            if(userProgress.lessons[i] >= 8) { badge.style.display = 'block'; }
+            else { badge.style.display = 'none'; }
+        }
+        document.getElementById('total-progress').innerText = `${totalScore}/40`;
+        document.getElementById('high-score').innerText = `${userProgress.highScore} đ`;
+    }
+
+    function goHome() {
+        document.getElementById('lesson-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('home-screen').classList.remove('hidden');
+        updateProgressUI();
+    }
+
+    function openLesson(id) {
+        currentLesson = id;
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('lesson-screen').classList.remove('hidden');
+        document.getElementById('lesson-title').innerText = lessonData[id].title;
+        
+        // Render Summary
+        const ul = document.getElementById('lesson-summary');
+        ul.innerHTML = '';
+        lessonData[id].summary.forEach(item => {
+            const li = document.createElement('li'); li.innerText = item; ul.appendChild(li);
+        });
+
+        // Chuẩn bị Mindmap HTML
+        renderMindmapHTML(id);
+
+        switchTab('content');
+        renderQuiz(); 
+    }
+
+    function switchTab(tabId) {
+        ['content', 'mindmap', 'quiz'].forEach(id => {
+            document.getElementById(`tab-${id}`).classList.add('hidden');
+        });
+        document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // Nếu là tab Mindmap, cần vẽ lại đường line sau khi hiện DOM
+        if(tabId === 'mindmap') {
+            setTimeout(drawMindmapLines, 50); // Đợi CSS render xong
+        }
+    }
+
+    // ==========================================
+    // LOGIC VẼ SƠ ĐỒ TƯ DUY (MINDMAP V2)
+    // ==========================================
+    function renderMindmapHTML(id) {
+        const mmContainer = document.getElementById('mindmap-render');
+        const data = lessonData[id].mindmap;
+        
+        // Lấy chữ ngắn làm tên trung tâm
+        let titleParts = lessonData[id].title.split('. ');
+        let shortTitle = titleParts.length > 1 ? titleParts[1] : titleParts[0];
+
+        // Chia nhánh sang 2 bên
+        const half = Math.ceil(data.length / 2);
+        const leftNodes = data.slice(0, half);
+        const rightNodes = data.slice(half);
+
+        let html = `
+            <svg class="mm-svg-lines" id="mm-lines"></svg>
+            <div class="mm-col mm-left">
+                ${leftNodes.map((txt, i) => createMindmapBox(txt, i, 'left')).join('')}
+            </div>
+            <div class="mm-center" id="mm-center">${shortTitle}</div>
+            <div class="mm-col mm-right">
+                ${rightNodes.map((txt, i) => createMindmapBox(txt, i + half, 'right')).join('')}
+            </div>
+        `;
+        mmContainer.innerHTML = html;
+    }
+
+    function createMindmapBox(text, index, side) {
+        const color = mindmapColors[index % mindmapColors.length];
+        // Sử dụng CSS Variable --b-color để truyền màu vào CSS hover effects
+        return `
+        <div class="mm-box-wrapper">
+            <div class="mm-box" data-idx="${index}" 
+                 style="--b-color: ${color}; border-color: ${color}; background-color: ${color}15;">
+                ${text}
+            </div>
+        </div>`;
+    }
+
+    function drawMindmapLines() {
+        const svg = document.getElementById('mm-lines');
+        if(!svg || svg.parentElement.offsetParent === null) return; // Không vẽ nếu tab đang ẩn
+        
+        svg.innerHTML = ''; // Xóa đường cũ
+        const containerRect = svg.parentElement.getBoundingClientRect();
+        const centerNode = document.getElementById('mm-center');
+        const cRect = centerNode.getBoundingClientRect();
+        
+        // Tọa độ tâm của hình tròn trung tâm
+        const cX = cRect.left - containerRect.left + cRect.width / 2;
+        const cY = cRect.top - containerRect.top + cRect.height / 2;
+
+        const boxes = document.querySelectorAll('.mm-box');
+        const isMobile = window.innerWidth <= 850;
+
+        boxes.forEach(box => {
+            const bRect = box.getBoundingClientRect();
+            const side = box.closest('.mm-left') ? 'left' : 'right';
+            const color = box.style.getPropertyValue('--b-color');
+            
+            let startX, startY, endX, endY, pathD;
+
+            if (isMobile) {
+                // Layout dọc: Kéo từ dưới trung tâm xuống trên cùng của box
+                startX = cX;
+                startY = cRect.bottom - containerRect.top - 10;
+                endX = bRect.left - containerRect.left + bRect.width / 2;
+                endY = bRect.top - containerRect.top;
+                
+                // Vẽ đường cong (Bezier chữ S dọc)
+                pathD = `M ${startX} ${startY} C ${startX} ${startY + 40}, ${endX} ${endY - 40}, ${endX} ${endY}`;
+            } else {
+                // Layout đối xứng trái/phải: Kéo từ cạnh bên trung tâm tới cạnh bên của box
+                startX = side === 'left' ? cX - cRect.width/2 + 10 : cX + cRect.width/2 - 10;
+                startY = cY;
+                
+                endX = side === 'left' ? bRect.right - containerRect.left : bRect.left - containerRect.left;
+                endY = bRect.top - containerRect.top + bRect.height / 2;
+
+                // Vẽ đường cong (Bezier chữ S ngang)
+                let cpX = (startX + endX) / 2; // Điểm uốn giữa
+                pathD = `M ${startX} ${startY} C ${cpX} ${startY}, ${cpX} ${endY}, ${endX} ${endY}`;
+            }
+
+            // Tạo thẻ SVG path
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathD);
+            path.setAttribute('class', 'mm-path');
+            path.setAttribute('stroke', color);
+            svg.appendChild(path);
+
+            // Hiệu ứng Hover: Sáng đường nối khi rê chuột vào hộp
+            box.onmouseenter = () => { 
+                path.style.strokeWidth = '6px'; 
+                path.style.filter = `drop-shadow(0 0 5px ${color})`; 
+            };
+            box.onmouseleave = () => { 
+                path.style.strokeWidth = '3px'; 
+                path.style.filter = 'none'; 
+            };
+        });
+    }
+
+    // Lắng nghe sự kiện resize để vẽ lại đường nối
+    window.addEventListener('resize', () => {
+        if(!document.getElementById('tab-mindmap').classList.contains('hidden')) {
+            drawMindmapLines();
+        }
+    });
+
+    // ==========================================
+    // LOGIC QUIZ (BÀI HỌC)
+    // ==========================================
+    function renderQuiz() {
+        quizState.answers = {};
+        quizState.score = 0;
+        document.getElementById('quiz-result').classList.add('hidden');
+        document.getElementById('quiz-container').classList.remove('hidden');
+        const container = document.getElementById('questions-list');
+        container.innerHTML = '';
+
+        let lessonQs = questionBank.filter(q => q.lesson === currentLesson);
+        quizState.questions = shuffle([...lessonQs]); 
+
+        quizState.questions.forEach((q, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-card';
+            let html = `<div class="q-type-badge">${q.type === 'mcq' ? 'Trắc nghiệm (1đ)' : q.type === 'tf' ? 'Đúng/Sai (1đ)' : 'Ghép nối (2đ)'}</div>
+                        <div class="q-text">Câu ${index + 1}: ${q.q}</div>`;
+            
+            if (q.type === 'mcq' || q.type === 'tf') {
+                let ops = q.options.map((opt, i) => ({text: opt, origIdx: i}));
+                if(q.type === 'mcq') ops = shuffle(ops);
+                
+                html += `<div class="options-grid" id="opts-${q.id}">`;
+                ops.forEach(opt => {
+                    html += `<button class="option-btn" onclick="selectOption(${q.id}, ${opt.origIdx}, this)">${opt.text}</button>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'match') {
+                let lefts = shuffle(q.pairs.map((p, i) => ({t: p[0], id: i})));
+                let rights = shuffle(q.pairs.map((p, i) => ({t: p[1], id: i})));
+                
+                html += `<div class="match-container" id="match-${q.id}">
+                            <div class="match-col" id="m-left-${q.id}">
+                                ${lefts.map(l => `<div class="match-item left-item" data-id="${l.id}" onclick="handleMatchClick(this, 'left', ${q.id})">${l.t}</div>`).join('')}
+                            </div>
+                            <div class="match-col" id="m-right-${q.id}">
+                                ${rights.map(r => `<div class="match-item right-item" data-id="${r.id}" onclick="handleMatchClick(this, 'right', ${q.id})">${r.t}</div>`).join('')}
+                            </div>
+                         </div>
+                         <div class="match-lines" id="m-lines-${q.id}">Chạm vào 1 ô bên trái, sau đó chạm 1 ô bên phải để ghép nối.</div>`;
+                
+                quizState.answers[q.id] = { pairs: [], matchedIds: [] };
+            }
+            
+            html += `<div class="explanation" id="exp-${q.id}"><b>Giải thích:</b> ${q.exp || 'Ghép nối đúng các cặp ý.'}</div>`;
+            qDiv.innerHTML = html;
+            container.appendChild(qDiv);
+        });
+    }
+
+    function selectOption(qId, origIdx, btnElem) {
+        const parent = document.getElementById(`opts-${qId}`);
+        Array.from(parent.children).forEach(btn => btn.classList.remove('selected'));
+        btnElem.classList.add('selected');
+        quizState.answers[qId] = origIdx;
+    }
+
+    let matchSelection = { qId: null, side: null, elem: null };
+    function handleMatchClick(elem, side, qId) {
+        if(elem.classList.contains('matched')) return;
+
+        if(matchSelection.qId !== null && matchSelection.qId !== qId) {
+            if(matchSelection.elem) matchSelection.elem.classList.remove('selected');
+            matchSelection = { qId: null, side: null, elem: null };
+        }
+
+        if(matchSelection.side === side) {
+            matchSelection.elem.classList.remove('selected');
+            elem.classList.add('selected');
+            matchSelection = { qId, side, elem };
+            return;
+        }
+
+        if(matchSelection.elem === null) {
+            elem.classList.add('selected');
+            matchSelection = { qId, side, elem };
+            return;
+        }
+
+        const firstElem = matchSelection.elem;
+        const secondElem = elem;
+        const firstId = firstElem.getAttribute('data-id');
+        const secondId = secondElem.getAttribute('data-id');
+
+        if(firstId === secondId) {
+            firstElem.classList.remove('selected'); firstElem.classList.add('matched');
+            secondElem.classList.remove('selected'); secondElem.classList.add('matched');
+            playSound('correct');
+            quizState.answers[qId].matchedIds.push(firstId);
+        } else {
+            firstElem.classList.remove('selected'); firstElem.classList.add('error');
+            secondElem.classList.add('error');
+            playSound('wrong');
+            setTimeout(() => {
+                firstElem.classList.remove('error');
+                secondElem.classList.remove('error');
+            }, 400);
+        }
+        matchSelection = { qId: null, side: null, elem: null };
+        
+        const qObj = quizState.questions.find(q => q.id === qId);
+        if(quizState.answers[qId].matchedIds.length === qObj.pairs.length) {
+            document.getElementById(`m-lines-${qId}`).innerText = "✅ Đã hoàn thành ghép nối!";
+            document.getElementById(`m-lines-${qId}`).style.color = "var(--success)";
+        }
+    }
+
+    function submitQuiz() {
+        let score = 0;
+        quizState.questions.forEach(q => {
+            const expDiv = document.getElementById(`exp-${q.id}`);
+            expDiv.style.display = 'block';
+
+            if(q.type === 'mcq' || q.type === 'tf') {
+                const parent = document.getElementById(`opts-${q.id}`);
+                const btns = Array.from(parent.children);
+                btns.forEach(btn => {
+                    const idx = parseInt(btn.getAttribute('onclick').split(',')[1]);
+                    if(idx === q.ans) btn.classList.add('correct');
+                    if(btn.classList.contains('selected') && idx !== q.ans) btn.classList.add('wrong');
+                });
+                if(quizState.answers[q.id] === q.ans) score += 1;
+            } else if (q.type === 'match') {
+                if(quizState.answers[q.id].matchedIds.length === q.pairs.length) {
+                    score += 2;
+                } else {
+                    document.getElementById(`m-lines-${q.id}`).innerText = "❌ Chưa ghép đúng toàn bộ.";
+                    document.getElementById(`m-lines-${q.id}`).style.color = "var(--danger)";
+                }
+            }
+        });
+
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('quiz-result').classList.remove('hidden');
+        
+        const scoreEl = document.getElementById('final-score');
+        let currentS = 0;
+        let intv = setInterval(() => {
+            if(currentS >= score) { clearInterval(intv); scoreEl.innerText = score; }
+            else { currentS++; scoreEl.innerText = currentS; }
+        }, 50);
+
+        setTimeout(() => { document.getElementById('result-bar').style.width = `${(score/10)*100}%`; }, 100);
+
+        const feedbackEl = document.getElementById('result-feedback');
+        const suggestEl = document.getElementById('result-suggestion');
+        if(score >= 9) { feedbackEl.innerText = "🌟 Xuất sắc!"; feedbackEl.style.color = "var(--success)"; suggestEl.innerText = ""; }
+        else if(score >= 7) { feedbackEl.innerText = "👍 Tốt!"; feedbackEl.style.color = "var(--primary)"; suggestEl.innerText = ""; }
+        else if(score >= 5) { feedbackEl.innerText = "👌 Đạt!"; feedbackEl.style.color = "#ff9800"; suggestEl.innerText = "Hãy xem lại phần giải thích nhé."; }
+        else { feedbackEl.innerText = "📚 Cần ôn lại!"; feedbackEl.style.color = "var(--danger)"; suggestEl.innerText = "Gợi ý: Hãy đọc lại tab 'Nội dung chính' và 'Sơ đồ tư duy'."; }
+
+        if(score > userProgress.lessons[currentLesson]) {
+            userProgress.lessons[currentLesson] = score;
+            localStorage.setItem('geo7_progress', JSON.stringify(userProgress));
+        }
+        
+        document.querySelector('.content-panel').scrollIntoView({behavior: 'smooth'});
+    }
+
+    // ==========================================
+    // LOGIC GAME CHUYÊN GIA
+    // ==========================================
+    function startGame() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.getElementById('lesson-screen').classList.add('hidden');
+        document.getElementById('game-result-area').classList.add('hidden');
+        document.getElementById('game-play-area').classList.remove('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+
+        let pool = questionBank.filter(q => q.type !== 'match');
+        gameState.questions = shuffle([...pool]).slice(0, 20);
+        gameState.currentIdx = 0;
+        gameState.score = 0;
+        gameState.timeLeft = 90;
+        document.getElementById('game-score-display').innerText = 0;
+        
+        renderGameQuestion();
+        
+        clearInterval(gameState.timerId);
+        gameState.timerId = setInterval(() => {
+            gameState.timeLeft--;
+            document.getElementById('game-time').innerText = gameState.timeLeft;
+            if(gameState.timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function renderGameQuestion() {
+        if(gameState.currentIdx >= gameState.questions.length) {
+            endGame(); return;
+        }
+        const q = gameState.questions[gameState.currentIdx];
+        document.getElementById('game-q-number').innerText = `Câu ${gameState.currentIdx + 1}/20`;
+        document.getElementById('game-question').innerText = q.q;
+        
+        let ops = q.options.map((opt, i) => ({text: opt, origIdx: i}));
+        if(q.type === 'mcq') ops = shuffle(ops);
+        
+        const optsContainer = document.getElementById('game-options');
+        optsContainer.innerHTML = '';
+        ops.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'game-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => handleGameAnswer(opt.origIdx, q.ans, btn);
+            optsContainer.appendChild(btn);
+        });
+        
+        const card = document.querySelector('.game-q-card');
+        card.style.animation = 'none';
+        card.offsetHeight; 
+        card.style.animation = 'slideUp 0.3s ease';
+    }
+
+    function handleGameAnswer(selected, correct, btnElem) {
+        const btns = document.querySelectorAll('.game-btn');
+        btns.forEach(b => b.onclick = null);
+
+        if(selected === correct) {
+            btnElem.style.background = 'var(--success)';
+            btnElem.style.color = 'white';
+            gameState.score++;
+            document.getElementById('game-score-display').innerText = gameState.score;
+            playSound('correct');
+        } else {
+            btnElem.style.background = 'var(--danger)';
+            btnElem.style.color = 'white';
+            playSound('wrong');
+            btns.forEach(b => {
+                if(b.innerText === gameState.questions[gameState.currentIdx].options[correct]) {
+                    b.style.border = '2px solid var(--success)';
+                }
+            });
+        }
+
+        setTimeout(() => {
+            gameState.currentIdx++;
+            renderGameQuestion();
+        }, 800);
+    }
+
+    function endGame() {
+        clearInterval(gameState.timerId);
+        document.getElementById('game-play-area').classList.add('hidden');
+        document.getElementById('game-result-area').classList.remove('hidden');
+        document.getElementById('game-final-score').innerText = gameState.score;
+        
+        const fb = document.getElementById('game-feedback');
+        if(gameState.score >= 17) fb.innerText = "🏆 Nhà địa lí học trẻ! Tuyệt vời!";
+        else if(gameState.score >= 13) fb.innerText = "👏 Hiểu rất vững kiến thức!";
+        else if(gameState.score >= 9) fb.innerText = "💪 Cần luyện thêm một chút nữa!";
+        else fb.innerText = "📚 Hãy ôn lại bài kĩ hơn nhé!";
+
+        if(gameState.score > userProgress.highScore) {
+            userProgress.highScore = gameState.score;
+            localStorage.setItem('geo7_progress', JSON.stringify(userProgress));
+        }
+    }
+
+    function quitGame() {
+        clearInterval(gameState.timerId);
+        goHome();
+    }
+
+    // --- KHỞI TẠO ---
+    window.onload = () => {
+        updateProgressUI();
+    };
+
+</script>
+</body>
+</html>

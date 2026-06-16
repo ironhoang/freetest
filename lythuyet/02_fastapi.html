@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>FastAPI — Audio</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 820px; margin: 0 auto; padding: 40px 24px; background: #fafaf8; color: #2c2c2c; line-height: 1.9; font-size: 18px; }
+  h1 { font-size: 28px; color: #1a1a2e; border-bottom: 3px solid #f59e0b; padding-bottom: 12px; margin-bottom: 8px; }
+  .subtitle { color: #666; margin-bottom: 40px; font-size: 16px; }
+  .qa { margin-bottom: 44px; padding: 28px 32px; background: #fff; border-radius: 12px; border-left: 5px solid #f59e0b; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .question { font-weight: 700; font-size: 19px; color: #92400e; margin-bottom: 16px; }
+  .qnum { background: #fef3c7; color: #b45309; padding: 2px 10px; border-radius: 20px; font-size: 14px; margin-right: 10px; font-family: monospace; }
+  .answer p { margin: 0 0 12px; }
+  .answer p:last-child { margin-bottom: 0; }
+  .term { color: #b45309; font-weight: 600; }
+  .analogy { background: #fffbeb; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-style: italic; color: #374151; border-left: 3px solid #fcd34d; }
+  .copy-btn { position: fixed; top: 20px; right: 20px; padding: 10px 18px; background: #f59e0b; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; }
+  .copy-btn:hover { background: #d97706; }
+</style>
+</head>
+<body>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(document.body.innerText)">📋 Copy toàn bộ</button>
+
+<h1>FastAPI & Framework — Ôn tập phỏng vấn</h1>
+<p class="subtitle">20 câu hỏi · Giải thích bằng tiếng Việt · Dành cho nghe audio</p>
+
+<div class="qa">
+  <div class="question"><span class="qnum">01.</span> FastAPI lifespan hoạt động như thế nào? Tại sao không dùng on_event?</div>
+  <div class="answer">
+    <p><span class="term">Lifespan</span> hay vòng đời ứng dụng là cơ chế cho phép bạn chạy code một lần duy nhất khi ứng dụng khởi động và một lần khi tắt. Đây là nơi lý tưởng để tạo kết nối đến cơ sở dữ liệu, tạo kết nối đến Redis, tải model máy học — những thứ tốn chi phí tạo ra và nên tái sử dụng.</p>
+    <p>Cơ chế hoạt động là một hàm đặc biệt chia làm hai phần. Phần trước ký hiệu yield là code khởi động — chạy một lần khi ứng dụng bắt đầu. Phần sau yield là code dọn dẹp — chạy một lần khi ứng dụng tắt. Ở giữa là toàn bộ thời gian ứng dụng phục vụ các request.</p>
+    <p>Cách cũ dùng decorator on_event đã bị đánh dấu không khuyến nghị từ phiên bản 0.93 vì lifespan có ưu điểm hơn: nếu code khởi động gặp lỗi giữa chừng, lifespan đảm bảo code dọn dẹp vẫn chạy, không để lại tài nguyên bị rò rỉ.</p>
+    <div class="analogy">Giống như ca làm việc của bảo vệ. Khi vào ca, anh ấy kiểm tra và bật hết các hệ thống — đó là phần khởi động. Khi tan ca, anh ấy tắt điện và khóa cửa — đó là phần dọn dẹp. Ở giữa là toàn bộ ca làm việc.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">02.</span> Dependency Injection trong FastAPI là gì? Cách hoạt động?</div>
+  <div class="answer">
+    <p><span class="term">Dependency Injection</span> hay tiêm phụ thuộc là kỹ thuật cung cấp các tài nguyên mà hàm xử lý request cần (kết nối cơ sở dữ liệu, thông tin người dùng đang đăng nhập, cấu hình) một cách tự động thay vì phải khai báo thủ công trong mỗi hàm.</p>
+    <p>Bạn viết các hàm phụ thuộc riêng biệt, ví dụ một hàm lấy kết nối cơ sở dữ liệu, một hàm xác minh token và trả về thông tin người dùng. Khi hàm xử lý request khai báo cần những thứ này, FastAPI tự động gọi các hàm phụ thuộc đó, truyền kết quả vào như tham số.</p>
+    <p>FastAPI còn thông minh ở điểm: nếu nhiều hàm xử lý trong cùng một request cùng cần một phụ thuộc, FastAPI chỉ gọi hàm phụ thuộc đó một lần và tái sử dụng kết quả — không gọi lại nhiều lần.</p>
+    <div class="analogy">Giống như hệ thống cấp phát đồ dùng trong bệnh viện. Bác sĩ không tự đi lấy găng tay, khẩu trang mỗi lần mổ. Có hệ thống chuẩn bị sẵn và trao cho bác sĩ đúng những gì cần. Sau ca mổ, hệ thống thu hồi và xử lý theo quy trình.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">03.</span> Middleware là gì? Thứ tự thực thi thế nào?</div>
+  <div class="answer">
+    <p><span class="term">Middleware</span> hay tầng trung gian là code chạy với mọi request trước khi đến hàm xử lý, và với mọi response trước khi trả về cho người dùng. Bạn có thể nghĩ middleware như trạm kiểm soát hai chiều.</p>
+    <p>Các ứng dụng phổ biến của middleware: ghi nhật ký mọi request và response bao gồm thời gian xử lý, thêm mã định danh vào mỗi request để truy vết sau này, kiểm tra token xác thực, giới hạn số lượng request từ một IP, xử lý Cross-Origin Resource Sharing cho phép trang web từ domain khác gọi API.</p>
+    <p>Thứ tự quan trọng: middleware được thêm vào sau sẽ chạy trước — như lớp ngoài cùng của hành tây. Middleware được thêm đầu tiên sẽ ở lớp trong cùng, gần hàm xử lý nhất.</p>
+    <div class="analogy">Hình dung sân bay. Hành khách đi qua nhiều trạm: check-in, soi chiếu an ninh, kiểm tra hộ chiếu, rồi mới lên máy bay. Khi về thì ngược lại. Mỗi trạm là một middleware, và thứ tự quan trọng.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">04.</span> Phân biệt HTTPException, custom exception handler và RequestValidationError?</div>
+  <div class="answer">
+    <p>Trong FastAPI, có ba cách xử lý lỗi chính cần phân biệt.</p>
+    <p><span class="term">HTTPException</span> là cách đơn giản nhất: bạn chủ động ném ra lỗi với mã trạng thái HTTP và thông báo. Ví dụ không tìm thấy người dùng thì ném lỗi 404 với thông báo "Không tìm thấy người dùng". FastAPI tự chuyển thành JSON trả về.</p>
+    <p><span class="term">Custom exception handler</span> là khi bạn tạo loại lỗi riêng của ứng dụng và đăng ký cách xử lý chúng. Ví dụ tạo loại lỗi "Số dư không đủ" với thông tin chi tiết về số dư hiện có và số tiền cần. Khi lỗi này được ném ra từ bất cứ đâu trong ứng dụng, handler đã đăng ký tự động xử lý và trả về JSON theo format thống nhất.</p>
+    <p><span class="term">RequestValidationError</span> là lỗi Pydantic tự động ném ra khi dữ liệu gửi lên không hợp lệ — sai kiểu dữ liệu, thiếu trường bắt buộc, vượt giới hạn giá trị. Bạn có thể ghi đè handler mặc định để định dạng lại thông báo lỗi theo chuẩn API của mình.</p>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">05.</span> Background Tasks là gì? Khi nào dùng Celery thay vì Background Tasks?</div>
+  <div class="answer">
+    <p><span class="term">Background Tasks</span> trong FastAPI cho phép bạn đăng ký tác vụ chạy sau khi đã trả response về cho người dùng. Ví dụ xử lý chuyển tiền xong, trả về "thành công" ngay, rồi gửi email thông báo trong nền — người dùng không phải chờ email được gửi.</p>
+    <p>Background Tasks đơn giản và không cần cài đặt thêm gì. Nhưng có giới hạn: nếu ứng dụng bị tắt đột ngột, tác vụ đang chờ sẽ mất. Không có cơ chế tự động thử lại khi tác vụ thất bại. Không xem được trạng thái các tác vụ đang chạy.</p>
+    <p><span class="term">Celery</span> là hệ thống hàng đợi tác vụ đầy đủ tính năng, cần có môi giới tin nhắn như Redis để lưu trữ hàng đợi. Tác vụ được lưu bền vững, ứng dụng có thể khởi động lại mà không mất tác vụ. Có tự động thử lại khi thất bại. Có giao diện theo dõi. Các worker chạy riêng biệt, có thể mở rộng độc lập.</p>
+    <div class="analogy">Background Tasks như giao việc trực tiếp cho đồng nghiệp ngồi cạnh — nhanh, đơn giản, nhưng nếu họ về sớm thì việc mất. Celery như giao qua hòm thư nội bộ — có ghi chép, ai đó khác có thể làm thay nếu người được giao vắng.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">06.</span> Hàm async và hàm sync trong FastAPI — khi nào dùng cái nào?</div>
+  <div class="answer">
+    <p>Đây là điểm nhiều người nhầm lẫn. Khi hàm xử lý request của bạn cần gọi các hàm bất đồng bộ như truy vấn cơ sở dữ liệu không đồng bộ, gọi API bên ngoài không đồng bộ, thì bạn dùng hàm async. FastAPI chạy hàm này trong vòng lặp sự kiện và không chặn các request khác.</p>
+    <p>Khi hàm xử lý dùng thư viện đồng bộ truyền thống, ví dụ thư viện kết nối cơ sở dữ liệu cũ không hỗ trợ async, thì bạn dùng hàm sync thông thường. FastAPI tự động chạy hàm này trong một luồng riêng biệt để không chặn vòng lặp sự kiện chính.</p>
+    <p>Lỗi nguy hiểm phổ biến: viết hàm async nhưng bên trong gọi hàm chặn như thời gian ngủ đồng bộ hay thư viện HTTP đồng bộ mà quên thêm await. Điều này chặn hoàn toàn vòng lặp sự kiện, làm cho toàn bộ ứng dụng đứng yên không xử lý request nào khác trong thời gian đó.</p>
+    <div class="analogy">Hãy tưởng tượng lễ tân khách sạn. Hàm async là lễ tân giỏi — trong khi chờ phòng được dọn, tiếp tục làm check-in cho khách khác. Hàm sync với FastAPI là thuê thêm lễ tân phụ ngồi ở phòng riêng để xử lý những việc đặc biệt, không làm gián đoạn quầy chính.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">07.</span> FastAPI dùng ASGI hay WSGI? Khác nhau thế nào?</div>
+  <div class="answer">
+    <p><span class="term">WSGI</span> là tiêu chuẩn giao tiếp giữa web server và ứng dụng Python cũ hơn, thiết kế theo mô hình đồng bộ. Mỗi request được xử lý tuần tự, phải xong cái này mới đến cái kia. Flask và Django truyền thống dùng WSGI. Không hỗ trợ WebSocket vì WebSocket cần kết nối dài hạn hai chiều.</p>
+    <p><span class="term">ASGI</span> là tiêu chuẩn mới hơn, thiết kế cho lập trình bất đồng bộ. Hỗ trợ xử lý nhiều request đồng thời, WebSocket, Server-Sent Events, HTTP/2. FastAPI xây dựng trên ASGI thông qua Starlette.</p>
+    <p>Để chạy ứng dụng FastAPI, cần ASGI server như <span class="term">Uvicorn</span>. Trong môi trường production với tải cao, thường chạy nhiều process Uvicorn thông qua Gunicorn để tận dụng nhiều nhân CPU, kết hợp hiệu quả của cả đa tiến trình và async.</p>
+    <div class="analogy">WSGI như đường một làn xe — xe phải chạy nối đuôi nhau. ASGI như đường cao tốc nhiều làn — nhiều xe chạy song song. Uvicorn là nhân viên điều phối giao thông trên đường cao tốc đó.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">08.</span> APIRouter dùng để làm gì?</div>
+  <div class="answer">
+    <p>Khi ứng dụng phát triển lớn hơn, nhét tất cả API endpoint vào một file sẽ rất khó quản lý. <span class="term">APIRouter</span> giúp bạn chia API thành các module riêng biệt theo domain nghiệp vụ — thanh toán, người dùng, sản phẩm — mỗi domain là một file riêng.</p>
+    <p>Mỗi router có thể có tiền tố URL riêng, nhóm tag riêng để tổ chức tài liệu API, và phụ thuộc riêng áp dụng cho toàn bộ các endpoint trong router đó. Ví dụ router thanh toán có thể yêu cầu xác thực cho tất cả endpoint mà không cần khai báo lại ở từng endpoint.</p>
+    <div class="analogy">Giống như tổ chức một bộ công ty. Thay vì mọi nhân viên báo cáo thẳng lên CEO, bạn có phòng ban riêng với trưởng phòng riêng. CEO chỉ quản lý các trưởng phòng. APIRouter là các phòng ban, app là CEO.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">09.</span> Response Model dùng để làm gì?</div>
+  <div class="answer">
+    <p><span class="term">Response Model</span> là khai báo cấu trúc dữ liệu mà API sẽ trả về. Khi khai báo response model, FastAPI tự động lọc dữ liệu — chỉ giữ lại các trường có trong model, loại bỏ tất cả những gì không khai báo.</p>
+    <p>Điều này đặc biệt quan trọng về bảo mật: hàm xử lý có thể trả về object người dùng đầy đủ bao gồm cả mật khẩu đã mã hóa, nhưng response model chỉ bao gồm id và email — mật khẩu tự động bị loại bỏ trước khi gửi về cho người dùng.</p>
+    <p>Ngoài ra, response model còn giúp FastAPI tự động tạo tài liệu chính xác, giúp các developer khác biết chính xác API sẽ trả về gì.</p>
+    <div class="analogy">Như quy trình xuất khẩu hàng hóa. Dù trong kho có nhiều loại hàng, tờ khai hải quan chỉ liệt kê những mặt hàng được phép xuất. Hải quan chỉ cho qua những gì trong tờ khai, phần còn lại giữ lại.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">10.</span> Làm sao implement JWT authentication trong FastAPI?</div>
+  <div class="answer">
+    <p>Quy trình xác thực JWT trong FastAPI thường gồm ba bước. Đầu tiên, khai báo cơ chế lấy token từ header Authorization dạng Bearer. FastAPI tự động đọc token từ header này khi có request.</p>
+    <p>Bước hai, viết hàm phụ thuộc nhận token đó, giải mã và xác minh chữ ký. Nếu token không hợp lệ hoặc đã hết hạn, ném lỗi 401 Unauthorized. Nếu hợp lệ, trả về thông tin người dùng từ payload của token.</p>
+    <p>Bước ba, các endpoint cần bảo vệ chỉ cần khai báo cần phụ thuộc vào hàm xác minh đó. FastAPI tự động chạy toàn bộ quy trình: đọc header, giải mã, xác minh, truyền thông tin người dùng vào endpoint.</p>
+    <div class="analogy">Như hệ thống thẻ từ trong tòa nhà. Nhân viên bảo vệ quẹt thẻ ở cửa (bước đọc token), hệ thống kiểm tra thẻ có hợp lệ không (bước xác minh), nếu hợp lệ mở cửa và ghi nhận ai vào (truyền thông tin người dùng vào endpoint).</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">11.</span> Làm sao handle CORS trong FastAPI?</div>
+  <div class="answer">
+    <p><span class="term">CORS</span> viết tắt của Cross-Origin Resource Sharing, nghĩa là chia sẻ tài nguyên đa nguồn gốc. Đây là cơ chế bảo mật của trình duyệt: khi một trang web ở domain A muốn gọi API ở domain B, trình duyệt sẽ hỏi server B có cho phép không.</p>
+    <p>FastAPI có middleware CORS tích hợp sẵn. Bạn chỉ cần thêm middleware này và cấu hình danh sách các domain được phép gọi API.</p>
+    <p>Điểm quan trọng về bảo mật: trong môi trường thực tế, không nên cho phép tất cả domain. Hãy liệt kê cụ thể các domain của ứng dụng frontend. Nếu API có xác thực, phải bật cho phép gửi thông tin xác thực. Và chỉ cho phép các phương thức HTTP cần thiết, không cho phép tất cả.</p>
+    <div class="analogy">Như chính sách khách đến thăm trong khu chung cư. Bảo vệ ở cổng hỏi khách muốn thăm ai, kiểm tra danh sách được phép. Không phải ai cũng vào được, chỉ những người trong danh sách chủ nhà đã đăng ký.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">12.</span> Path parameter, Query parameter và Request body — khi nào dùng cái nào?</div>
+  <div class="answer">
+    <p><span class="term">Path parameter</span> là phần nằm trong đường dẫn URL, ví dụ /users/123 thì 123 là path parameter. Dùng để định danh một resource cụ thể — bắt buộc phải có, không thể bỏ qua vì nó là một phần của đường dẫn.</p>
+    <p><span class="term">Query parameter</span> là phần sau dấu hỏi trong URL, ví dụ /transactions?page=2&from_date=2026-01-01. Dùng cho các tùy chọn như phân trang, lọc, sắp xếp — thường là tùy chọn không bắt buộc.</p>
+    <p><span class="term">Request body</span> là dữ liệu gửi kèm trong nội dung request, thường dạng JSON. Dùng khi cần gửi dữ liệu phức tạp hoặc dữ liệu nhạy cảm. Chỉ dùng với các phương thức POST, PUT, PATCH — các phương thức tạo mới hoặc cập nhật dữ liệu. Phương thức GET không nên có body.</p>
+    <div class="analogy">Đặt phòng khách sạn: số phòng là path parameter (phòng 305 cụ thể). Yêu cầu thêm như giờ nhận phòng sớm hay muộn là query parameter. Thông tin khách lưu trú như tên, số hộ chiếu là request body gửi kèm.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">13.</span> Làm sao test FastAPI endpoint?</div>
+  <div class="answer">
+    <p>FastAPI tích hợp sẵn công cụ test thông qua Test Client. Bạn có thể gọi trực tiếp các endpoint trong code test mà không cần khởi động server thật, giúp test chạy nhanh hơn nhiều.</p>
+    <p>Điểm mạnh của hệ thống Dependency Injection là khả năng thay thế phụ thuộc trong test. Thay vì kết nối cơ sở dữ liệu thật, bạn có thể thay thế bằng cơ sở dữ liệu giả hoặc cơ sở dữ liệu trong bộ nhớ chỉ tồn tại trong quá trình test. Điều này làm test độc lập và chạy nhanh.</p>
+    <p>Bạn nên test cả trường hợp thành công lẫn các trường hợp lỗi: dữ liệu không hợp lệ, không có quyền truy cập, tài nguyên không tồn tại. Test phải kiểm tra cả mã trạng thái HTTP lẫn nội dung response.</p>
+    <div class="analogy">Như thử nghiệm máy ATM. Bạn kiểm tra cả trường hợp rút tiền bình thường, rút quá số dư, thẻ sai PIN, thẻ hết hạn. Không cần tiền thật hay ATM thật — môi trường giả lập để test an toàn.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">14.</span> Streaming response là gì? Khi nào dùng?</div>
+  <div class="answer">
+    <p>Thông thường server xử lý xong hoàn toàn rồi mới gửi toàn bộ kết quả về client. <span class="term">Streaming response</span> là server gửi dữ liệu theo từng phần nhỏ ngay khi có, client nhận và xử lý từng phần mà không cần chờ toàn bộ.</p>
+    <p>Ứng dụng điển hình: xuất file lớn như báo cáo giao dịch cả năm dạng CSV — thay vì tạo file 500MB trong bộ nhớ rồi gửi, server đọc từng hàng từ cơ sở dữ liệu và gửi ngay về client. Bộ nhớ sử dụng gần như không đổi dù file có bao nhiêu dòng.</p>
+    <p>Ứng dụng khác: các model ngôn ngữ lớn như ChatGPT trả về từng từ ngay khi tạo ra thay vì chờ cả đoạn văn hoàn chỉnh — người dùng thấy phản hồi xuất hiện ngay lập tức thay vì chờ lâu rồi hiện hết một lúc.</p>
+    <div class="analogy">Streaming response như truyền hình trực tiếp — bạn xem từng khung hình ngay khi được quay, không phải đợi quay xong cả buổi rồi mới phát. So sánh với xem phim được tải về — phải đợi tải xong mới xem được.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">15.</span> WebSocket trong FastAPI hoạt động thế nào?</div>
+  <div class="answer">
+    <p>HTTP thông thường là giao tiếp một chiều: client gửi yêu cầu, server trả lời, kết thúc. <span class="term">WebSocket</span> là giao thức hai chiều: sau khi thiết lập kết nối, cả client và server đều có thể gửi tin nhắn cho nhau bất cứ lúc nào mà không cần request mới.</p>
+    <p>FastAPI hỗ trợ WebSocket trực tiếp. Bạn tạo endpoint WebSocket, khi kết nối được thiết lập, bạn vào vòng lặp liên tục: chờ tin nhắn từ client, xử lý, gửi tin nhắn lại. Kết nối duy trì cho đến khi một trong hai bên đóng lại.</p>
+    <p>Ứng dụng phổ biến trong fintech: thông báo realtime khi có giao dịch mới, cập nhật tỷ giá hối đoái liên tục, dashboard theo dõi giao dịch trực tiếp. Thay vì client hỏi server mỗi giây "có gì mới không?", server chủ động gửi khi có thông tin mới.</p>
+    <div class="analogy">HTTP như gửi thư — bạn gửi, chờ thư trả lời, xong. WebSocket như gọi điện thoại — kết nối duy trì, cả hai có thể nói bất cứ lúc nào cho đến khi một bên cúp máy.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">16.</span> Làm sao implement rate limiting trong FastAPI?</div>
+  <div class="answer">
+    <p><span class="term">Rate limiting</span> hay giới hạn tần suất là kỹ thuật kiểm soát số lượng request mỗi người dùng hoặc mỗi địa chỉ IP có thể gửi trong một khoảng thời gian nhất định. Quan trọng để bảo vệ hệ thống khỏi bị lạm dụng và tấn công.</p>
+    <p>Cách phổ biến nhất trong FastAPI là dùng Redis làm bộ đếm. Mỗi request ghi vào Redis key có tên là địa chỉ IP, giá trị là số lần request. Key tự động hết hạn sau ví dụ 60 giây. Nếu bộ đếm vượt quá ngưỡng cho phép, từ chối request với mã trạng thái 429 nghĩa là có quá nhiều request.</p>
+    <p>Lý do dùng Redis: Redis rất nhanh và quan trọng là hoạt động nguyên tử — đảm bảo khi nhiều server cùng xử lý request từ cùng IP, bộ đếm vẫn chính xác. Nếu chỉ dùng biến trong bộ nhớ của một server, các server khác sẽ không biết và người dùng có thể gửi nhiều hơn ngưỡng cho phép.</p>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">17.</span> Làm sao trả về nhiều loại response từ một endpoint?</div>
+  <div class="answer">
+    <p>Đôi khi một endpoint có thể trả về các loại response khác nhau tùy tình huống — giao dịch thành công trả về một format, giao dịch thất bại trả về format khác với thông tin lỗi chi tiết hơn.</p>
+    <p>Trong FastAPI, bạn khai báo trong phần tham số của decorator tất cả các mã trạng thái HTTP có thể trả về, mỗi cái kèm theo cấu trúc dữ liệu tương ứng. Điều này giúp tài liệu API chính xác, người dùng API biết phải xử lý những trường hợp nào.</p>
+    <p>Khi trả về response, thay vì trả về object trực tiếp, bạn trả về JSONResponse với mã trạng thái phù hợp. FastAPI sẽ không cố gắng áp dụng response model mặc định lên đó.</p>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">18.</span> OpenAPI docs được sinh tự động như thế nào trong FastAPI?</div>
+  <div class="answer">
+    <p>Đây là một trong những điểm mạnh nổi bật của FastAPI. Thay vì viết tài liệu riêng, FastAPI tự động tạo tài liệu từ code của bạn. Nó đọc type hints của các tham số, cấu trúc dữ liệu Pydantic, mô tả bổ sung trong khai báo Field, và metadata của decorator như tên, nhóm, mô tả.</p>
+    <p>Từ những thông tin này, FastAPI tạo ra một file JSON theo chuẩn OpenAPI và phục vụ tại hai địa chỉ: đường dẫn /docs hiển thị giao diện Swagger UI cho phép thử API trực tiếp trên trình duyệt, và đường dẫn /redoc hiển thị tài liệu đọc thuần túy.</p>
+    <p>Lợi ích lớn nhất: tài liệu không bao giờ lỗi thời vì nó được tạo trực tiếp từ code. Khi bạn thay đổi code, tài liệu thay đổi theo ngay lập tức.</p>
+    <div class="analogy">Như phần mềm tự động tạo bản vẽ kỹ thuật từ mô hình 3D. Bạn không vẽ bản vẽ riêng — thay đổi mô hình thì bản vẽ tự cập nhật. Code là nguồn sự thật duy nhất.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">19.</span> Làm sao xử lý file upload trong FastAPI?</div>
+  <div class="answer">
+    <p>FastAPI hỗ trợ nhận file upload thông qua định dạng multipart/form-data — đây là chuẩn HTTP cho phép gửi cả file và dữ liệu văn bản trong cùng một request.</p>
+    <p>Khi nhận file, bạn cần kiểm tra loại file được chấp nhận và giới hạn kích thước. Quan trọng nhất: không đọc toàn bộ file vào bộ nhớ nếu file có thể lớn. Thay vào đó, đọc và gửi từng phần — stream file trực tiếp lên dịch vụ lưu trữ như Amazon S3.</p>
+    <p>Trong ứng dụng ngân hàng, upload tài liệu xác minh danh tính là trường hợp phổ biến. File ảnh có thể lên đến vài chục megabyte. Streaming đảm bảo server không cần nhiều bộ nhớ dù nhiều người dùng upload cùng lúc.</p>
+    <div class="analogy">Như chuyển hàng qua băng chuyền. Thay vì chất toàn bộ hàng vào kho chứa rồi mới chuyển đi, băng chuyền di chuyển từng kiện hàng liên tục từ điểm A sang điểm B — hiệu quả và không cần kho chứa lớn.</div>
+  </div>
+</div>
+
+<div class="qa">
+  <div class="question"><span class="qnum">20.</span> Làm sao implement health check endpoint đúng cách?</div>
+  <div class="answer">
+    <p>Health check hay kiểm tra sức khỏe là endpoint đặc biệt để hệ thống quản lý container như Kubernetes biết ứng dụng có đang hoạt động bình thường không. Cần phân biệt hai loại.</p>
+    <p><span class="term">Liveness check</span> hỏi: ứng dụng có còn sống không? Nếu endpoint này không phản hồi, Kubernetes hiểu là ứng dụng bị treo và sẽ khởi động lại nó. Endpoint này nên trả lời ngay lập tức mà không cần kiểm tra gì phức tạp.</p>
+    <p><span class="term">Readiness check</span> hỏi: ứng dụng có sẵn sàng nhận traffic không? Endpoint này thực sự kiểm tra xem cơ sở dữ liệu có kết nối được không, Redis có phản hồi không, các phụ thuộc bên ngoài có hoạt động không. Nếu không sẵn sàng, Kubernetes ngừng gửi request mới đến ứng dụng này — nhưng không khởi động lại.</p>
+    <div class="analogy">Liveness check như kiểm tra xem nhân viên có còn trong văn phòng không. Readiness check như kiểm tra xem nhân viên đã sẵn sàng nhận cuộc gọi chưa — có thể họ đang ăn trưa và không muốn bị làm phiền dù vẫn ở văn phòng.</div>
+  </div>
+</div>
+
+</body>
+</html>

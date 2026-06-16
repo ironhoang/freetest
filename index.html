@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Chủ — Học Liệu</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+
+    header p {
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.25rem;
+      background: #1e293b;
+      border: 1px solid #273449;
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.18s, border-color 0.18s, transform 0.15s;
+    }
+
+    .card:hover {
+      background: #263348;
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      width: 2.4rem;
+      text-align: center;
+    }
+
+    .card-body {}
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.3;
+    }
+
+    .card-sub {
+      font-size: 0.78rem;
+      color: #64748b;
+      margin-top: 0.2rem;
+    }
+
+    /* Section accent colours */
+    .sec-lythuyet h2  { color: #60a5fa; border-color: #1d3a5f; }
+    .sec-lythuyet .card:hover { border-color: #60a5fa; }
+
+    .sec-qa h2        { color: #34d399; border-color: #0d3b2e; }
+    .sec-qa .card:hover { border-color: #34d399; }
+
+    .sec-dialy h2     { color: #f59e0b; border-color: #3d2e0a; }
+    .sec-dialy .card:hover { border-color: #f59e0b; }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: #334155;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Học Liệu</h1>
+  <p>Chọn một chủ đề để bắt đầu</p>
+</header>
+
+<div class="container">
+
+  <!-- SECTION: LÝ THUYẾT -->
+  <section class="sec-lythuyet">
+    <h2>📚 Lý Thuyết — Audio</h2>
+    <div class="grid">
+      <a class="card" href="lythuyet/01_python_core.html">
+        <span class="card-icon">🐍</span>
+        <div class="card-body">
+          <div class="card-title">Python Core</div>
+          <div class="card-sub">Bài 01 · lythuyet/</div>
+        </div>
+      </a>
+      <a class="card" href="lythuyet/02_fastapi.html">
+        <span class="card-icon">⚡</span>
+        <div class="card-body">
+          <div class="card-title">FastAPI</div>
+          <div class="card-sub">Bài 02 · lythuyet/</div>
+        </div>
+      </a>
+      <a class="card" href="lythuyet/03_database.html">
+        <span class="card-icon">🗄️</span>
+        <div class="card-body">
+          <div class="card-title">Database</div>
+          <div class="card-sub">Bài 03 · lythuyet/</div>
+        </div>
+      </a>
+      <a class="card" href="lythuyet/04_security.html">
+        <span class="card-icon">🔒</span>
+        <div class="card-body">
+          <div class="card-title">Security</div>
+          <div class="card-sub">Bài 04 · lythuyet/</div>
+        </div>
+      </a>
+      <a class="card" href="lythuyet/05_algorithms.html">
+        <span class="card-icon">🧮</span>
+        <div class="card-body">
+          <div class="card-title">Algorithms &amp; DS</div>
+          <div class="card-sub">Bài 05 · lythuyet/</div>
+        </div>
+      </a>
+      <a class="card" href="lythuyet/06_project_design.html">
+        <span class="card-icon">🏗️</span>
+        <div class="card-body">
+          <div class="card-title">Project &amp; System Design</div>
+          <div class="card-sub">Bài 06 · lythuyet/</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION: Q&A -->
+  <section class="sec-qa">
+    <h2>💬 Câu Hỏi Phỏng Vấn</h2>
+    <div class="grid">
+      <a class="card" href="QA/QA.html">
+        <span class="card-icon">🎯</span>
+        <div class="card-body">
+          <div class="card-title">Interview Q&amp;A</div>
+          <div class="card-sub">Tyme Prep · QA/</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION: ĐỊA LÝ -->
+  <section class="sec-dialy">
+    <h2>🌍 Địa Lý</h2>
+    <div class="grid">
+      <a class="card" href="khoi-dia-ly.html">
+        <span class="card-icon">🗺️</span>
+        <div class="card-body">
+          <div class="card-title">Khám Phá Châu Âu</div>
+          <div class="card-sub">Ôn Tập Địa Lí 7 · root/</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer>freetest · học liệu cá nhân</footer>
+
+</body>
+</html>

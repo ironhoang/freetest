@@ -14,14 +14,18 @@
   .answer p:last-child { margin-bottom: 0; }
   .term { color: #047857; font-weight: 600; }
   .analogy { background: #ecfdf5; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-style: italic; color: #374151; border-left: 3px solid #6ee7b7; }
+  .home-btn { position: fixed; top: 20px; left: 20px; padding: 10px 18px; background: #6b7280; color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  .home-btn:hover { background: #4b5563; }
+  @media print { .home-btn { display: none; } }
   .copy-btn { position: fixed; top: 20px; right: 20px; padding: 10px 18px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(16,185,129,.4); }
   .copy-btn:hover { background: #059669; }
 </style>
 </head>
 <body>
+<a class="home-btn" href="../index.html">← Trang chủ</a>
 <button class="copy-btn" onclick="navigator.clipboard.writeText(document.body.innerText)">📋 Copy toàn bộ</button>
 
-<h1>Database — Ôn tập phỏng vấn</h1>
+<h1>Database — Ôn tập kỹ thuật</h1>
 <p class="subtitle">20 câu hỏi · Giải thích bằng tiếng Việt · Dành cho nghe audio</p>
 
 <div class="qa">

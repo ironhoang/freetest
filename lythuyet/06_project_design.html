@@ -14,14 +14,18 @@
   .answer p:last-child { margin-bottom: 0; }
   .term { color: #0891b2; font-weight: 600; }
   .analogy { background: #ecfeff; border-radius: 8px; padding: 14px 18px; margin: 12px 0; font-style: italic; color: #374151; border-left: 3px solid #67e8f9; }
+  .home-btn { position: fixed; top: 20px; left: 20px; padding: 10px 18px; background: #6b7280; color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  .home-btn:hover { background: #4b5563; }
+  @media print { .home-btn { display: none; } }
   .copy-btn { position: fixed; top: 20px; right: 20px; padding: 10px 18px; background: #06b6d4; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; }
   .copy-btn:hover { background: #0891b2; }
 </style>
 </head>
 <body>
+<a class="home-btn" href="../index.html">← Trang chủ</a>
 <button class="copy-btn" onclick="navigator.clipboard.writeText(document.body.innerText)">📋 Copy toàn bộ</button>
 
-<h1>Project & System Design — Ôn tập phỏng vấn</h1>
+<h1>Project & System Design — Ôn tập kỹ thuật</h1>
 <p class="subtitle">20 câu hỏi · Giải thích bằng tiếng Việt · Dành cho nghe audio</p>
 
 <div class="qa">
@@ -201,7 +205,7 @@
 <div class="qa">
   <div class="question"><span class="qnum">19.</span> Tại sao chọn FastAPI cho dự án fintech?</div>
   <div class="answer">
-    <p>Đây là câu hỏi thường gặp khi phỏng vấn — cần giải thích quyết định kỹ thuật dựa trên nhu cầu cụ thể.</p>
+    <p>Đây là câu hỏi thường gặp khi kỹ thuật — cần giải thích quyết định kỹ thuật dựa trên nhu cầu cụ thể.</p>
     <p>FastAPI phù hợp với fintech vì những lý do sau. Hiệu suất cao nhờ async I/O — quan trọng khi xử lý nhiều request đồng thời trong giờ cao điểm. Type safety qua Pydantic tự động validate dữ liệu đầu vào — giảm lỗi do dữ liệu sai format trong giao dịch tài chính. Tài liệu API tự động — quan trọng khi làm việc với nhiều team và đối tác tích hợp.</p>
     <p>Dependency Injection giúp tổ chức code rõ ràng và dễ test — quan trọng với hệ thống tài chính cần test kỹ. Cộng đồng phát triển nhanh với nhiều thư viện hỗ trợ. So với Django thì nhẹ hơn và nhanh hơn cho API thuần túy. So với Flask thì có sẵn async, validation, tài liệu tự động mà Flask cần thêm extension.</p>
     <p>Nhược điểm cần thành thật nêu ra: còn trẻ hơn Django và Flask nên ecosystem nhỏ hơn. Async có learning curve cho team chưa quen. Không có ORM hay admin panel tích hợp sẵn.</p>
@@ -209,9 +213,9 @@
 </div>
 
 <div class="qa">
-  <div class="question"><span class="qnum">20.</span> Câu hỏi nào bạn muốn hỏi người phỏng vấn ở Tyme?</div>
+  <div class="question"><span class="qnum">20.</span> Câu hỏi nào bạn muốn hỏi người kỹ thuật ở Tyme?</div>
   <div class="answer">
-    <p>Đây là cơ hội thể hiện bạn đã nghiên cứu kỹ và thực sự quan tâm đến công ty — không phải chỉ cần việc làm. Câu hỏi tốt giúp bạn đánh giá công ty, đồng thời gây ấn tượng với interviewer.</p>
+    <p>Đây là cơ hội thể hiện bạn đã nghiên cứu kỹ và thực sự quan tâm đến công ty — không phải chỉ cần việc làm. Câu hỏi tốt giúp bạn đánh giá công ty, đồng thời gây ấn tượng với người hỏi.</p>
     <p>Những câu hỏi hay về kỹ thuật: "Team hiện đang xử lý những thách thức kỹ thuật nào lớn nhất trong năm tới?" — cho thấy bạn nghĩ đến tương lai. "Cấu trúc microservices hiện tại của Tyme chia thành các domain nào?" — cho thấy bạn hiểu về kiến trúc. "Quy trình on-call và incident response của team như thế nào?" — cho thấy bạn hiểu về production ownership.</p>
     <p>Câu hỏi về văn hóa và phát triển: "Tyme đo thành công của một engineer thế nào sau sáu tháng đầu?" — cho thấy bạn muốn contribute rõ ràng. "Team học công nghệ mới như thế nào?" — cho thấy bạn trân trọng việc phát triển liên tục. Tránh hỏi về lương hay phúc lợi ngay vòng đầu — để đến khi có offer.</p>
   </div>
